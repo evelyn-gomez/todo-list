@@ -1,17 +1,18 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const path = require('path'); 
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const path = require("path");
+
 module.exports = {
-  mode: 'development', 
-  entry: './src/index.js',
+  mode: "development",
+  entry: "./src/index.js",
   output: {
-    filename: 'main.js',
-    path: path.resolve(__dirname, 'dist'),
+    filename: "main.js",
+    path: path.resolve(__dirname, "dist"),
   },
-  plugins:[
+  plugins: [
     new HtmlWebpackPlugin({
-      title: 'Wepback App Testing', 
-      filename: 'index.html',
-      template: 'src/template.html', 
-    })
-  ]
+      title: "Wepback App Testing",
+      filename: "index.html",
+      template: "src/template.html",
+    }),
+  ],
 };

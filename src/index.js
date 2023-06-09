@@ -1,3 +1,5 @@
 import helloWorld from "./helloWorld";
+import viewTask from "./task";
 
-helloWorld(); 
+helloWorld();
+viewTask();
