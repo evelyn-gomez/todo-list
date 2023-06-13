@@ -4,17 +4,20 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link type="css" rel="stylesheet" href="path/to/normalize.css">
     <title><%= htmlWebpackPlugin.options.title %></title>
   </head>
   <body>
-    <div class="task-modal" class="hide green">
-      <div class="task-card">
-        <form action="post" class="task-form">
-          <label for="title" id="title"></label>
-          <input type="text" />
-        </form>
+    <div class="overlay off">
+      <div class="overlay-text">Overlay Text</div>
+    </div>
+    <div class="homepage">
+      <p id="hello">
+
+      </p>
+      <div class="button-div">
+        <button></button>
       </div>
-      <p id="hello"></p>
     </div>
   </body>
 </html>

@@ -1,5 +1,5 @@
-import helloWorld from "./helloWorld";
-import viewTask from "./task";
+import homePage from "./homePage";
+import { btnEventListener } from "./homePage";
 
-helloWorld();
-viewTask();
+homePage(); 
+btnEventListener(); 
