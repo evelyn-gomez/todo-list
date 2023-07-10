@@ -8,15 +8,50 @@
     <title><%= htmlWebpackPlugin.options.title %></title>
   </head>
   <body>
-    <div class="overlay off">
-      <div class="overlay-text">Overlay Text</div>
-    </div>
-    <div class="homepage">
-      <p id="hello">
-
-      </p>
-      <div class="button-div">
-        <button></button>
+    <div class="main">
+      <div class="overlay-modal hidden"> 
+      </div>
+      <div class="modal-parent hidden">
+        <div class="formHeader">
+          <h3>Add Modal</h3>
+        </div>
+        <div class="formContainer">
+          <form action="" method="get"  class= "task-form">
+            <div class="title">
+              <label for="title">Title</label>
+              <input type="text" name="title" id="title" required>
+            </div>
+            <div class="description">
+              <label for="description">Description</label>
+              <textarea name="description" id="description" cols="30" rows="10"></textarea>
+            </div>
+            <div class="dueDate">
+              <label for="dueDate">Due Date</label>
+              <input type="date" id="dueDate" name="dueDate">
+            </div>
+            <div class="priority">
+              <label for="priority">Priority</label>
+              <select name="priority" id="priority" class="task-priority">
+                <option value disabled selected> How important is this task?</option>
+                <option value="low"> Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+              </select>
+            </div>
+            <div class="formSubmit">
+              <button class="cancelBtn">Cancel</button>
+              <button class="addBtn">Add</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="homepage">
+        <div class="tasks-list">
+          <h3 class="tasks-header">All Tasks</h3>
+        </div>
+        <div class="open-modal">
+          <button></button>
+        </div>
       </div>
     </div>
   </body>

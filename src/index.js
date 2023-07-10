@@ -1,5 +1,5 @@
-import homePage from "./homePage";
-import { btnEventListener } from "./homePage";
+import './styles/main.css'; 
+import { modal } from './DOM';
 
-homePage(); 
-btnEventListener(); 
+modal.openModal();
+modal.closeModal(); 
