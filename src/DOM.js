@@ -1,7 +1,9 @@
-import { doc } from 'prettier';
 import './styles/main.css'; 
 
-let homepage = document.querySelector('.homepage'); 
+export let homepage = document.querySelector('.homepage'); 
+
+let yo =  document.querySelector('.form'); 
+console.log(yo); 
 
 class Modal{
   // homepage; 
@@ -22,26 +24,32 @@ class Modal{
   }
   __addHiddenClass(div){
     div.classList.add('hidden'); 
-  };
+  }
   
-  openModal(){
+  open(){
     this.modalBtn.addEventListener('click',()=>{
+      this.__addHiddenClass(homepage); 
       this.__removeHiddenClass(this.overlayDiv);
       this.__removeHiddenClass(this.modalParent); 
-      this.__addHiddenClass(homepage); 
     });
-  };
+  }
   
-  closeModal(){
+  close(){
     this.overlayDiv.addEventListener('click', ()=>{
-      this.__addHiddenClass(this.overlayDiv);
       this.__addHiddenClass(this.modalParent); 
+      this.__addHiddenClass(this.overlayDiv);
       this.__removeHiddenClass(homepage); 
     })
   }
 }
-
+//Need the container that it click's
+//to be the one that has the eventListener
+//right now it's set to overlayDIV.addEventLlistern
 export let modal = new Modal(); 
+
+
+
+
 
 
 
