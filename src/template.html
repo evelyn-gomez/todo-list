@@ -1,16 +1,15 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link type="css" rel="stylesheet" href="path/to/normalize.css">
+    <link type="css" rel="stylesheet" href="path/to/normalize.css" />
     <title><%= htmlWebpackPlugin.options.title %></title>
   </head>
   <body>
     <div class="main">
-      <div class="overlay-modal hidden"> 
-      </div>
+      <div class="overlay-modal hidden"></div>
       <div class="modal-parent hidden">
         <div class="formHeader">
           <h3>Add Modal</h3>
@@ -19,29 +18,36 @@
           <form action="" method="get" id="task-form">
             <div class="title">
               <label for="title">Title</label>
-              <input type="text" name="title" id="title">
+              <input type="text" name="title" id="title" required minlength="3" maxlength="20" autofocus />
             </div>
             <div class="description">
               <label for="description">Description</label>
-              <textarea name="description" id="description" cols="30" rows="10"></textarea>
+              <textarea
+                name="description"
+                id="description"
+                cols="30"
+                rows="10"
+              ></textarea>
             </div>
             <div class="dueDate">
               <label for="dueDate">Due Date</label>
-              <input type="date" id="dueDate" name="dueDate">
+              <input type="date" id="dueDate" name="dueDate" />
             </div>
             <div class="priority">
               <label for="priority">Priority</label>
               <select name="priority" id="priority" class="task-priority">
-                <option value disabled selected> How important is this task?</option>
-                <option value="low"> Low</option>
+                <option value disabled selected>
+                  How important is this task?
+                </option>
+                <option value="low">Low</option>
                 <option value="medium">Medium</option>
                 <option value="high">High</option>
               </select>
             </div>
-          </form> 
-          <div class="form-submit">
+          </form>
+          <div class="form-submit" form = "task-form" >
             <button id="cancel-button">Cancel</button>
-            <button type="submit" id="add-button">Add</button>
+            <button type="submit" id="add-button" form ="task-form">Add</button>
           </div>
         </div>
       </div>

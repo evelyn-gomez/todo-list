@@ -1,19 +1,19 @@
-@import "~normalize.css/normalize.css"; 
+@import "~normalize.css/normalize.css";
 
-body{
-  display: inline-block; 
+body {
+  display: inline-block;
 }
-.main{
+.main {
   display: flex;
   margin: 10px;
 }
-.homepage{
-  display: flex; 
-  padding: 2px; 
+.homepage {
+  display: flex;
+  padding: 2px;
   background-color: palegreen;
   flex-direction: column;
 }
-.overlay-modal{
+.overlay-modal {
   position: fixed;
   width: 100%;
   height: 100%;
@@ -26,7 +26,7 @@ body{
   cursor: pointer;
 }
 
-.modal-parent{
+.modal-parent {
   display: flex;
   flex-direction: column;
   background-color: rgb(125, 125, 255);
@@ -36,18 +36,18 @@ body{
   margin: 20px 61px;
 }
 
-form > div{
+form > div {
   display: flex;
   flex-direction: column;
 }
 
-.hidden{
+.hidden {
   display: none;
 }
-.blue{
+.blue {
   color: blue;
   font: 40px;
 }
-button:hover{
-  color: red; 
+button:hover {
+  color: red;
 }
