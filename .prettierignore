@@ -1,0 +1,7 @@
+node_modules
+build
+coverage
+.DS_store
+/webpack.config.js
+# main.js
+# .eslintrc.js

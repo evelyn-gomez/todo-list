@@ -1,17 +1,30 @@
 @import "~normalize.css/normalize.css";
 
+html{
+  height: 100%;
+  width: 100%;
+}
 body {
   display: inline-block;
+  height: inherit;
+  width: inherit;
 }
 .main {
   display: flex;
+  flex-direction: column;
   margin: 10px;
+  height: inherit;
+  width: inherit;
 }
 .homepage {
   display: flex;
   padding: 2px;
   background-color: palegreen;
   flex-direction: column;
+}
+.tasks-container{
+  display: flex;
+  background-color: aqua;
 }
 .overlay-modal {
   position: fixed;

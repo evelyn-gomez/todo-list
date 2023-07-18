@@ -2,6 +2,10 @@
 import "./styles/main.css";
 
 export const homepage = document.querySelector(".homepage");
+const modalBtn = document.querySelector(".open-modal button");
+modalBtn.textContent = "New Task";
+const overlayDiv = document.querySelector(".overlay-modal");
+const modalParent = document.querySelector(".modal-parent");
 
 function removeHiddenClass(div){  
   return div.classList.remove("hidden");
@@ -11,35 +15,38 @@ function addHiddenClass(div){
   return div.classList.add("hidden");
 }
 
-class Modal {
-  // homepage;
-  /** @type Element */
-  modalBtn;
+function removeHiddenOverlayClasses(){
+  addHiddenClass(homepage);
+  removeHiddenClass(overlayDiv);
+  removeHiddenClass(modalParent);
+}
 
-  modalParent;
+function addHiddenOverlayClasses(){
+  addHiddenClass(modalParent);
+  addHiddenClass(overlayDiv);
+  removeHiddenClass(homepage);
+}
 
-  overlayDiv;
+class Modal{
+  constructor(){
+    modalBtn.addEventListener("click", removeHiddenOverlayClasses);
+    overlayDiv.addEventListener("click", addHiddenOverlayClasses);
+  }
 
-  constructor() {
-    this.modalBtn = document.querySelector(".open-modal button");
-    this.modalBtn.textContent = "New Task";
-    this.overlayDiv = document.querySelector(".overlay-modal");
-    this.modalParent = document.querySelector(".modal-parent");
-    this.modalBtn.addEventListener("click", () => {
-      addHiddenClass(homepage);
-      removeHiddenClass(this.overlayDiv);
-      removeHiddenClass(this.modalParent);
-    });
-    this.overlayDiv.addEventListener("click", () => {
-      addHiddenClass(this.modalParent);
-      addHiddenClass(this.overlayDiv);
-      removeHiddenClass(homepage);
-    });
+  // eslint-disable-next-line class-methods-use-this
+  remove() {
+    removeHiddenOverlayClasses();
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  add(){
+    addHiddenOverlayClasses();
   }
 }
-// Need the container that it click's
-// to be the one that has the eventListener
-// right now it's set to overlayDIV.addEventLlistern
-export { Modal };
+
+export default Modal
+
+
+
 
 
