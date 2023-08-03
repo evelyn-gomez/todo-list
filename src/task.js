@@ -75,17 +75,21 @@ export default class Task {
     domTitle.setAttribute("readonly", "readonly");
     domDescription.setAttribute("readonly", "readonly"); 
     domDueDate.setAttribute("readonly", "readonly"); 
-    domPriority.setAttribute("readonly", "readonly"); 
+    domPriority.setAttribute("disabled","disabled"); 
 
     domTitle.value = this.title;
     domTitle.textContent = domTitle.value; 
     domDescription.textContent = this.description;
     const dueDateInInputFormat = convertDueDateFormat(this.dueDate)
     domDueDate.value = dueDateInInputFormat;
-    console.log(domDueDate.value); 
-    domPriority.textContent = this.priority; 
     
-    
+    priorities.forEach(priority =>{
+      const option = document.createElement("option");
+      option.value = priority; 
+      option.textContent = priority; 
+      domPriority.appendChild(option); 
+    })
+
     taskDiv.appendChild(domTitle); 
     taskDiv.appendChild(domDescription);
     taskDiv.appendChild(domDueDate);
@@ -104,7 +108,7 @@ export default class Task {
         domTitle.removeAttribute("readonly", "readonly");
         domDescription.removeAttribute("readonly", "readonly");
         domDueDate.removeAttribute("readonly", "readonly");
-        domPriority.removeAttribute("readonly", "readonly");
+        domPriority.removeAttribute("disabled","disabled");
         domTitle.focus();
       }else{
         // const titleValidated = validateTitle(domTitle);
@@ -116,9 +120,7 @@ export default class Task {
         domTitle.setAttribute("readonly", "readonly");
         domDescription.setAttribute("readonly", "readonly"); 
         domDueDate.setAttribute("readonly", "readonly"); 
-        domPriority.setAttribute("readonly", "readonly"); 
-        console.log(domDescription.value);
-        console.log(domTitle)
+        domPriority.setAttribute("disabled","disabled"); 
       }
     })
   }
