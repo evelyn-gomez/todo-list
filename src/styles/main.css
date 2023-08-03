@@ -16,16 +16,62 @@ body {
   height: inherit;
   width: inherit;
 }
-.homepage {
-  display: flex;
-  padding: 2px;
-  background-color: palegreen;
-  flex-direction: column;
+
+/* homepage and task container */
+.home-header-container{
+  display: grid;
+  grid-area: home-header;
+  background-color: #B7DF7C;
+}
+.side-bar-container{
+  display: grid;
+  grid-area: sidebar;
 }
 .tasks-container{
-  display: flex;
-  background-color: aqua;
+  display: grid;
+  grid-area: tasks;
+  background-color: #D9D9D3;
 }
+
+.homepage {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto;
+  grid-template-areas: 
+  "home-header home-header"
+  "sidebar tasks";
+  padding: 2px;
+  background-color: #DCE0E5;
+
+}
+
+/* parents of task */
+.tasks{
+  display: grid; 
+  row-gap: 10px;
+}
+.task{
+  display: grid;
+
+  grid-template-columns: repeat(4, 1fr);  
+}
+
+/* task-items */
+/* 
+.title-item{
+
+}
+.description-item{
+
+}
+.dueDate-item{
+
+ .priority-item{
+ } 
+
+} */
+
+/* overlaymodal and form */
 .overlay-modal {
   position: fixed;
   width: 100%;
@@ -54,6 +100,7 @@ form > div {
   flex-direction: column;
 }
 
+/* modal hide form -- has to be after form and overlay div */
 .hidden {
   display: none;
 }
@@ -64,3 +111,5 @@ form > div {
 button:hover {
   color: red;
 }
+
+

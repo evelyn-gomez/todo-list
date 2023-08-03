@@ -5,20 +5,39 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link type="css" rel="stylesheet" href="path/to/normalize.css" />
-    <title>Wepback App Testing</title>
+    <title>To Do List Project</title>
   <script defer src="main.js"></script></head>
   <body>
     <div class="main">
+      <div class="homepage">
+        <div class="home-header-container">
+          <h1>All Tasks </h1>
+        </div>
+        <div class="side-bar-container">
+            <div class="menu">
+              where all teh project can be seen and due today, tomorrow and next week
+            </div>
+        </div>
+        <div class="tasks-container">
+          <h3 class="tasks-header">All Tasks</h3>
+          <div class="open-modal">
+            <button></button>
+          </div>
+          <div class="tasks">
+
+          </div>
+        </div>
+      </div>
       <div class="overlay-modal hidden"></div>
       <div class="modal-parent hidden">
         <div class="formHeader">
-          <h3>Add Modal</h3>
+          <h3>Add Task</h3>
         </div>
         <div class="formContainer">
           <form action="" method="get" id="task-form">
             <div class="title">
               <label for="title">Title</label>
-              <input type="text" name="title" id="title" required minlength="3" maxlength="20" autofocus />
+              <input type="text" name="title" id="title" required minlength="2" maxlength="20" autofocus />
             </div>
             <div class="description">
               <label for="description">Description</label>
@@ -26,7 +45,7 @@
                 name="description"
                 id="description"
                 cols="30"
-                rows="10"
+                rows="7"
               ></textarea>
             </div>
             <div class="dueDate">
@@ -49,14 +68,6 @@
             <button id="cancel-button">Cancel</button>
             <button type="submit" id="add-button" form ="task-form">Add</button>
           </div>
-        </div>
-      </div>
-      <div class="homepage">
-        <div class="tasks-container"> Here is the taskcontainer
-          <!-- <h3 class="tasks-header">All Tasks</h3> -->
-        </div>
-        <div class="open-modal">
-          <button></button>
         </div>
       </div>
     </div>

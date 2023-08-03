@@ -1,74 +1,125 @@
-/* eslint-disable no-unused-vars */
 import "./styles/main.css";
 import { DateTime } from "luxon"; 
 
-// task form and input values
-const taskForm = document.querySelector("#task-form");
-const tasksContainer = document.querySelector(".tasks-container"); 
 
-class Task {
-  constructor(title, description, dueDate) {
-    this.title = title;
-    this.description = description;
-    this.dueDate = dueDate;
-    // this.priority = document.querySelector('.priortity');
-  }
-
-}
-
+const tasksContainer = document.querySelector(".tasks"); 
 // client-side form validation - NEEDED
 
+const priorities = ["low", "medium", "high"]; 
 function setDueDate(date){
   if(date === ""){
-    const today = DateTime.now(DateTime.DATE_SHORT).toLocaleString();
-    return today;
+    // might want to uninstall luxon and install date-fns instead -- recommended library from TOP 
+    const today = DateTime.now(DateTime.DATE_SHORT)
+    const tomorrow = today.plus({ days: 1 }).toLocaleString();
+    return tomorrow;
   } 
   // formatted date to 'MM/DD/YYYY' 
   const formattedDate = new Date(date).toLocaleDateString(); 
   return formattedDate; 
 }
 
-function addToTasksContainer(newTask){
-  const taskDiv = document.createElement("div"); 
-  const p = document.createElement("p");  
-  p.textContent = "somewords here and there";
-  taskDiv.appendChild(p);
-  tasksContainer.appendChild(taskDiv); 
-  console.log(newTask); 
-};
-const homepage = document.querySelector(".homepage");
-const overlayDiv = document.querySelector(".overlay-modal");
-const modalParent = document.querySelector(".modal-parent");
+function convertDueDateFormat(inputDate){
+  let [month, day, year] = inputDate.split("/");
 
-function addHiddenOverlayClasses(){
-  modalParent.classList.add("hidden");
-  overlayDiv.classList.add("hidden"); 
-  homepage.classList.remove("hidden"); 
+  if(month.length === 1){
+    month = `0${month}`;
+  }
+
+  if(day.length === 1){
+    day = `0${day}`; 
+  }
+
+  const updatedDate  = `${year}-${month}-${day}`;
+  console.log(updatedDate);
+  return updatedDate; 
 }
 
-// task instantiated and added to DOM 
-function submitForm() {
-  taskForm.addEventListener("submit", (e) => {
-    console.log(e);
-    e.preventDefault(); 
-    const title = document.querySelector("#title").value;
-    const description = document.querySelector("#description").value;
-    let dueDate = document.querySelector("#dueDate").value;
+// /** @param {Element} title */
+// function validateTitle(title){
+//   if()
+// }
+
+export default class Task {
+  get edit(){
+    const button = document.createElement("button");
+    button.textContent = "Edit"; 
+    return button; 
+  }
+
+  constructor(title, description, dueDate, priority ) {
+    this.title = title;
+    this.description = description;
+    this.dueDate = setDueDate(dueDate); 
+    this.priority = priority; 
+    this.editBtn = this.edit;  
+  }
+
+  addToDOM(){
+    const taskDiv = document.createElement("div"); 
+    taskDiv.classList.add("task"); 
+
+    const domTitle = document.createElement("input");
+    const domDescription = document.createElement("textarea");
+    const domDueDate = document.createElement("input");
+    const domPriority = document.createElement("select"); 
     
-    // reformat dueDate
-    dueDate = setDueDate(dueDate);
 
-    const task = new Task(title, description, dueDate);
-    // // save task to Home - Task Container -- List 
-    addToTasksContainer(task); 
-    console.log(task); 
-    //need to add this form else where 
-    addHiddenOverlayClasses()
-  });
-}
+    domTitle.classList.add("title-item");
+    domDescription.classList.add("description-item");
+    domDueDate.classList.add("dueDate-item"); 
+    domPriority.classList.add("priority-item");
 
-export default submitForm
+    domTitle.type = "text"; 
+    domDueDate.type = "date"; 
+    
+    domTitle.setAttribute("readonly", "readonly");
+    domDescription.setAttribute("readonly", "readonly"); 
+    domDueDate.setAttribute("readonly", "readonly"); 
+    domPriority.setAttribute("readonly", "readonly"); 
 
+    domTitle.value = this.title;
+    domTitle.textContent = domTitle.value; 
+    domDescription.textContent = this.description;
+    const dueDateInInputFormat = convertDueDateFormat(this.dueDate)
+    domDueDate.value = dueDateInInputFormat;
+    console.log(domDueDate.value); 
+    domPriority.textContent = this.priority; 
+    
+    
+    taskDiv.appendChild(domTitle); 
+    taskDiv.appendChild(domDescription);
+    taskDiv.appendChild(domDueDate);
+    taskDiv.appendChild(domPriority);
+    taskDiv.appendChild(this.editBtn); 
 
+    tasksContainer.appendChild(taskDiv);
+    
+    const taskDomItems = [domTitle, domDescription, domDueDate, domPriority]; 
+    console.log(taskDomItems);
 
-
+    this.editBtn.addEventListener("click", ()=>{
+      console.log("poked"); 
+      if(this.editBtn.textContent === "Edit"){
+        this.editBtn.textContent = "Save";
+        domTitle.removeAttribute("readonly", "readonly");
+        domDescription.removeAttribute("readonly", "readonly");
+        domDueDate.removeAttribute("readonly", "readonly");
+        domPriority.removeAttribute("readonly", "readonly");
+        domTitle.focus();
+      }else{
+        // const titleValidated = validateTitle(domTitle);
+        if(domTitle.value.length < 2 || domTitle.value.length > 20){
+          alert(`Title length cannot be shorter than 2 char or longer than 20 char - your title is ${domTitle.value.length} char long`); 
+          return; 
+        }
+        this.editBtn.textContent = "Edit"
+        domTitle.setAttribute("readonly", "readonly");
+        domDescription.setAttribute("readonly", "readonly"); 
+        domDueDate.setAttribute("readonly", "readonly"); 
+        domPriority.setAttribute("readonly", "readonly"); 
+        console.log(domDescription.value);
+        console.log(domTitle)
+      }
+    })
+  }
+};

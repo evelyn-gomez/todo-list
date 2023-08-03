@@ -1,20 +1,7 @@
-import "./styles/main.css"
-import Modal, { homepage } from "./DOM";
-import submitForm from "./task"
+import "./styles/main.css";
+import dom from "./DOM";
 
-
-let modal = new Modal(); 
-
-submitForm(); 
-
-
-
-
-
-
-
-
-
+dom.initialListeners()
  
 
 // const button = document.querySelector(".open-modal button");
