@@ -26,7 +26,7 @@ export default class TaskForm {
   constructor({ onSubmit }) {
     this.onSubmit = onSubmit;
     this.taskForm = document.querySelector("#task-form");
-    this.cancelBtn = document.querySelector("#cancel-button"); 
+    this.cancelBtn = document.querySelector("#cancel-button");
     this.taskForm.addEventListener("submit", (e)=>{
       e.preventDefault(); 
       const title = this.titleInput.value;

@@ -12,64 +12,253 @@ body {
 .main {
   display: flex;
   flex-direction: column;
-  margin: 10px;
-  height: inherit;
   width: inherit;
 }
 
-/* homepage and task container */
+/* homepage > .home-header-container and .content */
+.homepage {
+  display: grid;
+  grid-template-rows: 1fr 6fr;
+  grid-template-areas: 
+  "home-header"
+  "content-cont";
+  height: 100vh;
+}
+
 .home-header-container{
   display: grid;
   grid-area: home-header;
-  background-color: #B7DF7C;
+  color: whitesmoke;
+  background-color: #228e58;  
 }
-.side-bar-container{
+.home-header-container > h1{
+  margin-left: 10px;
+}
+/* child of .homepage / parent of side-bar-container and .task-container*/
+.content {
+  display:flex;
+  grid-area: content-cont; 
+  scroll-behavior: smooth;
+  overflow-y: scroll;
+}
+ 
+/* child of .content */
+@media only screen and (max-width: 400px){
+  .side-bar-main{
+    width: 35px;
+    align-items: center;
+}
+  .collapse-icon{
+    transform: rotate(180deg);
+  }
+}
+.side-bar-main{
+  display: flex;
+  flex-direction: column;
+  background-color: #D9D9D3;
+  padding: 15px;
+  width: 350px; 
+  transition: width 0.3s ease-out;
+}
+
+/*children of side-bar-main */
+
+.side-bar-icon{
+  display: flex;
+  align-self: flex-end;
+  margin-bottom: 20px;
+  width: fit-content;
+}
+
+.side-bar-menu{
   display: grid;
-  grid-area: sidebar;
+  gap: 20px;
 }
+
+.side-bar-menu > div{
+  /* gap: 15px; */
+  display: grid;
+  grid-template-columns: .5fr 1fr;
+  width: fit-content;
+}
+
+.side-bar-menu > div > p{
+  font-size: 20px;
+}
+
+.sideBar-menu-button{
+ border: none; 
+ background-color: transparent  ;
+}
+
+/*change the sidebar icon*/
+.collapse-icon{
+  transform: rotate(180deg);
+}
+
+.collapse{
+  width: 35px;
+  transition: width 0.3s ease-out;
+  align-items: center;
+}
+
+svg{
+  width: 35px;
+  height: 35px;
+}
+
+/* child of .content */
 .tasks-container{
   display: grid;
-  grid-area: tasks;
-  background-color: #D9D9D3;
-}
-
-.homepage {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto;
-  grid-template-areas: 
-  "home-header home-header"
-  "sidebar tasks";
-  padding: 2px;
-  background-color: #DCE0E5;
-
-}
-
-/* parents of task */
-.tasks{
-  display: grid; 
+  background-color: #fefdfc;
+  justify-items: center;
+  grid-template-rows: 60px 60px;
+  width: 100%;
   row-gap: 10px;
 }
+
+/* children of task-container */
+.tasks-header{
+  display: flex;
+} 
+
+.open-modal{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly; 
+}
+.open-modal > button{
+  background-color: #D9D9D3;
+}
+.tasks{
+  display: grid; 
+  grid-auto-rows: min-content;
+  row-gap: 10px;
+  overflow: scroll; 
+  margin-top: 20px;
+  max-width: 900px;
+}
+
+/* children of .tasks */
 .task{
   display: grid;
-
-  grid-template-columns: repeat(4, 1fr);  
+  grid-template-columns: minmax(40px, 0.25fr) repeat(4, 1fr);
+  grid-template-areas: 
+  "checked title description dueDate priority"
+  ". buttons . . .";
+  margin: 20px 20px 10px 20px;
+  grid-column-gap: 10px;
+  grid-row-gap: 10px;
 }
 
-/* task-items */
-/* 
+.editing{
+  /* -webkit-box-shadow:  0px 2px 5px 1px rgba(155, 155, 155, .5);
+  box-shadow:  0px 2px 5px 1px rgba(155, 155, 155, .5); */
+  filter: drop-shadow(0 0 0.75rem  rgba(155, 155, 155, 0.612));
+}
+.edit{
+  background-color: rgb(178, 251, 178);
+  
+}
+.task > div{
+  display: grid;
+  grid-template-rows: repeat(2, 1fr);
+}
+
+.task > div > input, textarea, select {
+  border: solid black 1px ;
+  border-radius: 5px;
+  width: 90%;
+  height: 30px;
+}
+
+.task > div >  input[type="date"] {
+  height: 32px; 
+}
+.completed-task{
+  color: gray;
+  /* background-color: darkgray; */
+  text-decoration: line-through;
+}
+
+/*textarea -- has to fit with input types, it does change input tag height*/
+.check-item{
+  grid-area: checked; 
+  position: relative;
+}
+
+#check-box{
+  display: flex; 
+  top: 34px;
+}
+/* Completed TASK button */
+
+#check-item{
+  width: 35px;
+  height: 35px;
+  border: 1px solid black;
+  border-radius: 50%;
+  vertical-align: middle;
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.green {
+  background-image: url(../assets/images/done_FILL1_wght400_GRAD0_opsz20.svg);
+  background-color: #66bb6a;
+  border-color: #66bb6a;
+}
+
+/*end of CHECKED checkbox*/
+
 .title-item{
-
+  grid-area: title;
 }
+.title-item > input:invalid{
+  background-color: red;
+}
+
 .description-item{
+  grid-area: description;
+}
+.description-item > textarea{
+  width: 90%;
+  height: 28px;
+}
+
+.dueDate-item{
+  grid-area: dueDate;
+}
+
+.dueDate-item > input{
+  height: 30px;
+}
+.priority-item{
+  grid-area: priority;
+} 
+.priority-item > select{
+  width: 90%;
+  height: 100%;
+}
+select:disabled{
+  color: black;
 
 }
-.dueDate-item{
 
- .priority-item{
- } 
+#task-buttons{
+  display: flex;
+  flex-direction: row;
+  grid-area: buttons;
+  column-gap: 48px;
+  justify-content: space-between;
+}
 
-} */
+.task-buttons > button{
+  width: 60px;
+}
+
 
 /* overlaymodal and form */
 .overlay-modal {
@@ -81,23 +270,51 @@ body {
   right: 0;
   bottom: 0;
   background-color: rgba(152, 27, 27, 0.5);
-  z-index: 1;
+  z-index: 2;
   cursor: pointer;
 }
 
 .modal-parent {
   display: flex;
   flex-direction: column;
+  border: solid 1px rgb(125,125,255);
+  border-radius: 20px;
   background-color: rgb(125, 125, 255);
-  position: fixed;
-  z-index: 2;
+  position: absolute;
+  max-width: 600px;
+  bottom: 250px;
+  left: 500px;
+  z-index: 3;
   padding: 10px;
-  margin: 20px 61px;
+  margin: 10px;
 }
-
-form > div {
+.formContainer{
   display: flex;
   flex-direction: column;
+  gap: 10px;
+}
+
+form{
+  display: grid;
+  grid-template-columns: repeat(4,1fr); 
+  column-gap: 10px;
+}
+
+form#task-form > div {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+}
+
+form > div > input, select, textarea {
+  border: solid black 1px;
+  border-radius: 5px;
+  width: 90%;
+  height: 30px;
+}
+
+.description{
+  width: 90%;
+  /* height: 28px; */
 }
 
 /* modal hide form -- has to be after form and overlay div */
@@ -108,8 +325,10 @@ form > div {
   color: blue;
   font: 40px;
 }
-button:hover {
-  color: red;
+
+button{
+  border: solid 1px black;
+  border-radius: 5px;
 }
 
 
