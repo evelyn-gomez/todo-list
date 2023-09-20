@@ -1,7 +1,7 @@
 import "./styles/main.css";
-import TaskForm from "./form";
+import TaskForm from "./taskForm";
 import Task from "./task";
-import { addHeadersofMenu, removeHeadersOfMenu } from "./utils";
+import { expandSideBar, collapseSideBar, createNewProjectInput, removeActiveProject} from "./utils";
 
 class DOM {
   constructor(){
@@ -19,14 +19,15 @@ class DOM {
     this.sidebarMenu = document.querySelector(".side-bar-menu");
     this.sideBarTodayTasks = this.sidebarMenu.querySelector(".today-tasks svg"); 
     this.sideBarWeeklyTask = this.sidebarMenu.querySelector(".weekly-tasks svg"); 
-    this.sideBarProjects = this.sidebarMenu.querySelector(".projects svg"); 
+    this.sideBarProjects = this.sidebarMenu.querySelector(".projects svg");
+    this.projectsParent = document.querySelector(".projects-all-container") 
   }
 
   /**
    * @param {import("./form").TaskParams} taskParams 
    */
-  addTask({ title, description, dueDate, priority }){
-    const task = new Task(title, description, dueDate, priority);
+  addTask({ title, dueDate, priority }){
+    const task = new Task(title, dueDate, priority);
     task.addToDOM();
     this.closeModal()
   }
@@ -40,10 +41,14 @@ class DOM {
  closeModal(){
   this.modalParent.classList.add("hidden"); 
   this.overlayDiv.classList.add("hidden"); 
+  this.form.cancel();
  }
 
  initialListeners(){
     this.modalBtn.addEventListener("click", ()=>{
+        if(this.projectsParent.classList.contains("active")){
+          removeActiveProject(this.projectsParent); 
+        }
         this.openModal();
     });
     this.overlayDiv.addEventListener("click", ()=>{
@@ -52,23 +57,20 @@ class DOM {
     this.form = new TaskForm({
       onSubmit: (...args) => this.addTask(...args)
     });
-    const formCancelBtn = this.form.cancel(); 
+    const formCancelBtn = document.querySelector("#cancel-button"); 
     formCancelBtn.addEventListener("click",()=>{
-      this.closeModal(); 
+      this.closeModal();
+      this.form.cancel();
     })
     this.sidebarIcon.addEventListener("click", ()=>{
       const icon = this.sidebarIcon.querySelector(".side-bar-svg"); 
-      const menuDiv = this.sidebarContainer.querySelector(".side-bar-menu"); 
-      const childrenofMenu = menuDiv.children;
       if(icon.classList.contains("collapse-icon")){
-        icon.classList.remove("collapse-icon");
-        this.sidebarContainer.classList.remove("collapse"); 
-        addHeadersofMenu(childrenofMenu); 
+        expandSideBar(icon, this.sidebarContainer); 
+        return;
+      }if(this.projectsParent.classList.contains("active")){
         return;
       }
-      this.sidebarContainer.classList.add("collapse");
-      icon.classList.add("collapse-icon"); 
-      removeHeadersOfMenu(childrenofMenu);
+      collapseSideBar(icon, this.sidebarContainer); 
     })
     this.sideBarTodayTasks.addEventListener("click",()=>{
       console.log("hi, clicked tpdau task"); 
@@ -77,8 +79,16 @@ class DOM {
       console.log("weekly tasks");
     });
     this.sideBarProjects.addEventListener("click",()=>{
-      console.log("projects"); 
+      const icon = this.sidebarIcon.querySelector(".side-bar-svg"); 
+      if(icon.classList.contains("collapse-icon")){
+        expandSideBar(icon, this.sidebarContainer)
+      }else if(this.projectsParent.classList.contains("active")){
+        // basically need to do nothing but need newProjectInput.focus() -cant access it so would need like a promise? 
+        return;
+      }
+      createNewProjectInput();  
     })
+   
  }
 
 }

@@ -1,4 +1,5 @@
 import { DateTime } from "luxon";
+import Project from "./projects";
 
 export const taskClassesforItems = ["check-item", "title-item", "description-item", "dueDate-item", "priority-item"]; 
 export const priorities = ["","low", "medium", "high"];
@@ -36,7 +37,6 @@ export function addHeadersofMenu(childrenofMenu){
   // eslint-disable-next-line no-plusplus
   for(let i=0; i < childrenofMenu.length; i++){
     const child = childrenofMenu[i];
-    child.classList.remove("narrow"); 
     child.querySelector("p").textContent = headersOfMenu[i]; 
   }
 }
@@ -44,20 +44,154 @@ export function addHeadersofMenu(childrenofMenu){
 export function removeHeadersOfMenu(childrenofMenu){
   for(let i=0; i < childrenofMenu.length; i++){
     const child = childrenofMenu[i];
-    child.classList.add("narrow");
     child.querySelector("p").textContent = ""; 
   }
 }
 
 export function removeFadeOut(el, time) {
-  // eslint-disable-next-line no-param-reassign
-  el.style.transition = `opacity ease-out`;
-  // eslint-disable-next-line no-param-reassign
-  el.style.opacity = 0;
-  console.log("hello from fade"); 
-  setTimeout(() => {
-      el.parentNode.removeChild(el);
-  }, time);
+
+  // setTimeout(() => {
+  //     // eslint-disable-next-line no-param-reassign
+  //   console.log("hello from fade");
+  //     el.parentNode.removeChild(el);
+  // }, time);
+}
+function isTitle(taskTitle){
+  const minLength = taskTitle.getAttribute("minlength");
+  const maxlength = taskTitle.getAttribute("maxlength"); 
+
+  if(taskTitle.value.length <= maxlength && taskTitle.value.length >= minLength){
+    return true; 
+  }return false; 
+}
+
+function taskEditing(taskDOMItems){
+  taskDOMItems.forEach(item =>{
+    item.classList.add("edit"); 
+    if(item.hasAttribute("readonly")){
+      item.removeAttribute("readonly", "readonly");
+    }else if(item.hasAttribute("disabled")){
+      item.removeAttribute("disabled","disabled");
+    }
+  })
+}
+
+/* eslint-disable no-param-reassign */
+/**
+ * 
+ * @param {Element} editBtn
+ * @param {HTMLCollectionBase} taskDOMDivs
+ * @param {HTMLAllCollection} taskDOMItems
+ */
+export default function editTask(editBtn, taskDOMDivs, taskDOMItems){
+  const taskTitleDiv = taskDOMDivs.find(item => item.classList.contains("title-item")); 
+  const titleLabel = taskTitleDiv.querySelector("label"); 
+  const taskDiv = taskTitleDiv.parentElement;
+  if(editBtn.textContent === "Edit" ){
+    taskDiv.classList.add("editing"); 
+    /** TASKDIV will have transform transition to allow it to look like its been edited */
+    titleLabel.textContent = "Title must be between 2 - 22 characters";  
+    editBtn.textContent = "Save"; 
+    taskEditing(taskDOMItems); 
+  } else{
+    if(!isTitle(taskTitleDiv.querySelector("input"))){
+      // taskDiv.classList.remove("editing");
+      return; 
+    }
+    editBtn.textContent = "Edit"
+    taskDiv.classList.remove("editing"); 
+    titleLabel.textContent = ""; 
+    taskDOMItems.forEach(item =>{
+      item.classList.remove("edit"); 
+      if(!item.hasAttribute("readonly")){
+        item.setAttribute("readonly","readonly");
+      }else if(!item.hasAttribute("disabled")){
+        item.setAttribute("disabled","disabled"); 
+      }
+    })
+  }
+}
+
+export const taskTester = {
+  title: "tester_title",
+  description: "", 
+  dueDate: "9/12/2023", 
+  priority: "low", 
+}
+export function removeActiveProject(projectsParent){
+  const projectsCollection = projectsParent.children; 
+  const projectsArray = Array.from(projectsCollection); 
+  const activeElement = projectsArray.find(element => element.classList.contains("active"))
+  projectsParent.removeChild(activeElement); 
+  projectsParent.classList.remove("active"); 
+}
+
+function createTempProject() {
+  const div = document.createElement("div"); 
+  const input = document.createElement("input"); 
+  const addBtn = document.createElement("button"); 
+  const deleteBtn = document.createElement("button"); 
+  
+  div.classList.add("project"); 
+  div.classList.add("active");  
+
+  input.id = "project-input"; 
+  addBtn.id = "project-add-button"; 
+  deleteBtn.id = "project-delete-button";
+
+  addBtn.textContent = "Add"; 
+  deleteBtn.textContent = "Delete";
+
+  input.focus();
+
+  div.appendChild(input); 
+  div.appendChild(addBtn); 
+  div.appendChild(deleteBtn); 
+
+  return {div, input, addBtn, deleteBtn}
+}
+
+export function createNewProjectInput(){
+  const projectsParent = document.querySelector(".projects-all-container"); 
+  projectsParent.classList.add("active");
+  
+  const tempProject = createTempProject();
+
+  projectsParent.appendChild(tempProject.div); 
+
+  tempProject.addBtn.addEventListener("click",(e)=>{;
+    tempProject.div.classList.remove("active"); 
+    projectsParent.classList.remove("active"); 
+    // add project to storage
+    // add project to DOM
+    e.preventDefault();
+  });
+
+  tempProject.deleteBtn.addEventListener("click", (e)=>{
+    projectsParent.removeChild(tempProject.div);  
+    projectsParent.classList.remove("active"); 
+    e.preventDefault(); 
+  })
+}
+
+export function expandSideBar(icon, sideBarContainer){
+  const menuDiv = sideBarContainer.querySelector(".side-bar-menu"); 
+  const projectMenu = menuDiv.querySelector(".projects div"); 
+  const childrenofMenu = menuDiv.children;
+  sideBarContainer.classList.remove("collapse"); 
+  icon.classList.remove("collapse-icon");
+  projectMenu.removeAttribute("id","projects-hidden"); 
+  addHeadersofMenu(childrenofMenu);
+}
+
+export function collapseSideBar(icon,sideBarContainer){
+  const menuDiv = sideBarContainer.querySelector(".side-bar-menu"); 
+  const projectMenu = menuDiv.querySelector(".projects div"); 
+  const childrenofMenu = menuDiv.children;
+  sideBarContainer.classList.add("collapse");
+  icon.classList.add("collapse-icon");
+  projectMenu.setAttribute("id","projects-hidden"); 
+  removeHeadersOfMenu(childrenofMenu);
 }
 
 

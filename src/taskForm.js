@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import "./styles/main.css"
 
 /** @typedef {{ title: string; description: string; dueDate: string; priority: string}} TaskParams */
@@ -8,9 +9,9 @@ export default class TaskForm {
     return document.querySelector("#title");
   }
 
-  get descriptionInput(){
-    return document.querySelector("#description"); 
-  }
+  // get descriptionInput(){
+  //   return document.querySelector("#description"); 
+  // }
 
   get dueDateInput(){
     return document.querySelector("#dueDate");
@@ -30,11 +31,11 @@ export default class TaskForm {
     this.taskForm.addEventListener("submit", (e)=>{
       e.preventDefault(); 
       const title = this.titleInput.value;
-      const description = this.descriptionInput.value; 
+      // const description = this.descriptionInput.value; 
       const dueDate = this.dueDateInput.value; 
       const priority = this.priorityInput.value; 
       this.onSubmit({
-        title, description, dueDate, priority
+        title, dueDate, priority
       }); 
       this.reset(); 
     });
@@ -43,12 +44,13 @@ export default class TaskForm {
   reset(){
     this.titleInput.value = ""; 
     this.dueDateInput.value = "";
-    this.descriptionInput.value = "";
+    // this.descriptionInput.value = "";
     this.priorityInput.value = ""
   }
 
   cancel(){
-    return this.cancelBtn; 
+   this.reset(); 
   }
 
 }
+

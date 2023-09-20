@@ -21,7 +21,9 @@
             <div class="side-bar-menu">
               <div class="today-tasks"> 
                 <button class="today-btn sideBar-menu-button">
-                  <svg class="today-svg" xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 -960 960 960" width="48"><path d="M352.817-310Q312-310 284-338.183q-28-28.183-28-69T284.183-476q28.183-28 69-28T422-475.817q28 28.183 28 69T421.817-338q-28.183 28-69 28ZM180-80q-24 0-42-18t-18-42v-620q0-24 18-42t42-18h65v-60h65v60h340v-60h65v60h65q24 0 42 18t18 42v620q0 24-18 42t-42 18H180Zm0-60h600v-430H180v430Zm0-490h600v-130H180v130Zm0 0v-130 130Z"/></svg>
+                  <svg class="today-svg" xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 -960 960 960" width="48">
+                    <path d="M352.817-310Q312-310 284-338.183q-28-28.183-28-69T284.183-476q28.183-28 69-28T422-475.817q28 28.183 28 69T421.817-338q-28.183 28-69 28ZM180-80q-24 0-42-18t-18-42v-620q0-24 18-42t42-18h65v-60h65v60h340v-60h65v60h65q24 0 42 18t18 42v620q0 24-18 42t-42 18H180Zm0-60h600v-430H180v430Zm0-490h600v-130H180v130Zm0 0v-130 130Z"/>
+                  </svg>
                 </button>
                 <p>Today</p>
               </div>
@@ -36,6 +38,11 @@
                   <svg xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 -960 960 960" width="48"><path d="M510-378h60v-132h132v-60H570v-132h-60v132H378v60h132v132ZM260-200q-24 0-42-18t-18-42v-560q0-24 18-42t42-18h560q24 0 42 18t18 42v560q0 24-18 42t-42 18H260Zm0-60h560v-560H260v560ZM140-80q-24 0-42-18t-18-42v-620h60v620h620v60H140Zm120-740v560-560Z"/></svg>
                 </button>
                 <p>Projects</p>
+                <div class="projects-all-container">
+                  <div>one</div>
+                  <div>two</div>
+                  <div>three</div>
+                </div>
               </div>
             </div>
           </div>
@@ -58,9 +65,9 @@
           <form action="" method="get" id="task-form">
             <div class="title">
               <label for="title">Title</label>
-              <input type="text" name="title" id="title" required minlength="2" maxlength="20" autofocus />
+              <input type="text" name="title" id="title" required minlength="2" maxlength="20"/>
             </div>
-            <div class="description">
+            <!-- <div class="description">
               <label for="description">Description</label>
               <textarea
                 name="description"
@@ -68,7 +75,7 @@
                 cols="30"
                 rows="7"
               ></textarea>
-            </div>
+            </div> -->
             <div class="dueDate">
               <label for="dueDate">Due Date</label>
               <input type="date" id="dueDate" name="dueDate" format="MM/DD/YY" />

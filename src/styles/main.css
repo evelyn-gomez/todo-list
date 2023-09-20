@@ -79,16 +79,51 @@ body {
   /* gap: 15px; */
   display: grid;
   grid-template-columns: .5fr 1fr;
-  width: fit-content;
+  grid-template-rows: 1fr minmax(300px, fit-content);
+  grid-template-areas: 
+  "icon name"
+  "project project";
+  width: initial;
 }
 
+.projects-all-container{
+  grid-area: project;
+}
+#projects-hidden{
+  visibility: hidden;
+}
+
+.project{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas: 
+  "input input"
+  "add delete";
+}
+.project > #project-input{
+  display: inline-block;
+  grid-area: input;
+}
+.project > #project-add-button{
+  display: inline-block;
+  grid-area: add;
+}
+
+.project > #project-delete-button{
+  display: inline-block;
+  grid-area: delete; 
+}
 .side-bar-menu > div > p{
   font-size: 20px;
+  grid-area: name;
 }
 
 .sideBar-menu-button{
  border: none; 
- background-color: transparent  ;
+ background-color: transparent;
+ grid-area: icon;
+ max-width: 50px;
+ max-height: 50px;
 }
 
 /*change the sidebar icon*/
@@ -137,6 +172,7 @@ svg{
   overflow: scroll; 
   margin-top: 20px;
   max-width: 900px;
+  transition: all 2s ease-out; 
 }
 
 /* children of .tasks */
@@ -149,6 +185,7 @@ svg{
   margin: 20px 20px 10px 20px;
   grid-column-gap: 10px;
   grid-row-gap: 10px;
+  transition: all 2s ease-out; 
 }
 
 .editing{
@@ -206,13 +243,14 @@ svg{
 }
 
 .green {
-  background-image: url(../assets/images/done_FILL1_wght400_GRAD0_opsz20.svg);
+  background-image: url(../assets/images/done_FILL1_wght400_GRAD0_opsz20.svg); 
   background-color: #66bb6a;
   border-color: #66bb6a;
 }
 
 /*end of CHECKED checkbox*/
 
+/* children of .task */
 .title-item{
   grid-area: title;
 }
@@ -264,7 +302,7 @@ select:disabled{
 .overlay-modal {
   position: fixed;
   width: 100%;
-  height: 100%;
+  height: auto;
   top: 0;
   left: 0;
   right: 0;
@@ -282,11 +320,10 @@ select:disabled{
   background-color: rgb(125, 125, 255);
   position: absolute;
   max-width: 600px;
-  bottom: 250px;
-  left: 500px;
   z-index: 3;
   padding: 10px;
-  margin: 10px;
+  margin: 200px 1rem 0px 350px;
+
 }
 .formContainer{
   display: flex;
@@ -294,18 +331,18 @@ select:disabled{
   gap: 10px;
 }
 
-form{
+#task-form{
   display: grid;
   grid-template-columns: repeat(4,1fr); 
   column-gap: 10px;
 }
 
-form#task-form > div {
+#task-form > div {
   display: grid;
   grid-template-rows: 1fr 1fr;
 }
 
-form > div > input, select, textarea {
+#task-form > div > input, select, textarea {
   border: solid black 1px;
   border-radius: 5px;
   width: 90%;

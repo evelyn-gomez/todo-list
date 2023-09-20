@@ -1,11 +1,10 @@
 import "./styles/main.css";
-import { editTask, removeTask } from "./handlers";
-import { setDueDate, convertDueDateFormat, priorities as PRIORITIES, taskClassesforItems as TASK_CLASSES_FOR_ITEMS } from "./utils";
+import editTask, { setDueDate, convertDueDateFormat, priorities as PRIORITIES, taskClassesforItems as TASK_CLASSES_FOR_ITEMS } from "./utils";
 
 export default class Task {
-  constructor(title, description, dueDate, priority ) {
+  constructor(title, dueDate, priority ) {
     this.title = title;
-    this.description = description;
+    // this.description = description;
     this.dueDate = setDueDate(dueDate); 
     this.priority = priority; 
   }
@@ -30,9 +29,9 @@ export default class Task {
     const DOMTitleLabel = document.createElement("label");
     const DOMTitle = document.createElement("input");
     
-    const DOMDescriptionDiv = document.createElement("div"); 
-    const DOMDescriptionLabel = document.createElement("label"); 
-    const DOMDescription = document.createElement("textarea");
+    // const DOMDescriptionDiv = document.createElement("div"); 
+    // const DOMDescriptionLabel = document.createElement("label"); 
+    // const DOMDescription = document.createElement("textarea");
     
     const DOMDueDateDiv = document.createElement("div");
     const DOMDueDateLabel = document.createElement("label"); 
@@ -48,8 +47,8 @@ export default class Task {
     DOMTitleDiv.appendChild(DOMTitleLabel); 
     DOMTitleDiv.appendChild(DOMTitle); 
 
-    DOMDescriptionDiv.appendChild(DOMDescriptionLabel);
-    DOMDescriptionDiv.appendChild(DOMDescription); 
+    // DOMDescriptionDiv.appendChild(DOMDescriptionLabel);
+    // DOMDescriptionDiv.appendChild(DOMDescription); 
 
     DOMDueDateDiv.appendChild(DOMDueDateLabel); 
     DOMDueDateDiv.appendChild(DOMDueDate); 
@@ -57,8 +56,8 @@ export default class Task {
     DOMPriorityDiv.appendChild(DOMPriorityLabel);
     DOMPriorityDiv.appendChild(DOMPriority); 
 
-    const taskDOMDivs = [DOMTaskCompleteDiv, DOMTitleDiv, DOMDescriptionDiv, DOMDueDateDiv, DOMPriorityDiv]; 
-    const taskDOMItems = [DOMTitle, DOMDescription, DOMDueDate, DOMPriority]; 
+    const taskDOMDivs = [DOMTaskCompleteDiv, DOMTitleDiv, DOMDueDateDiv, DOMPriorityDiv]; 
+    const taskDOMItems = [DOMTitle, DOMDueDate, DOMPriority]; 
    
     taskDOMDivs.forEach(item =>{ 
       const index = taskDOMDivs.indexOf(item); 
@@ -74,15 +73,15 @@ export default class Task {
     DOMTitle.setAttribute("required", "true"); 
     DOMTitle.setAttribute("minlength", "2");
     DOMTitle.setAttribute("maxlength", "20"); 
-    DOMDescription.setAttribute("readonly", "readonly")
-    DOMDescription.setAttribute("rows", "10"); 
-    DOMDescription.setAttribute("cols", "50");  
+    // DOMDescription.setAttribute("readonly", "readonly")
+    // DOMDescription.setAttribute("rows", "10"); 
+    // DOMDescription.setAttribute("cols", "50");  
     DOMDueDate.setAttribute("readonly", "readonly"); 
     DOMPriority.setAttribute("disabled","disabled"); 
     
     DOMTitle.textContent = this.title;
     DOMTitle.value = DOMTitle.textContent; 
-    DOMDescription.textContent = this.description;
+    // DOMDescription.textContent = this.description;
     DOMDueDate.value = convertDueDateFormat(this.dueDate);
 
     PRIORITIES.forEach(priority =>{
@@ -106,12 +105,25 @@ export default class Task {
     buttonsDiv.appendChild(this.editBtn);
     buttonsDiv.appendChild(this.deleteBtn); 
 
+    taskDiv.addEventListener("keyup", (e)=>{
+      if(e.key === "Enter"){
+        e.preventDefault(); 
+        editTask(this.editBtn,taskDOMDivs,taskDOMItems);
+        DOMTitle.focus()
+      }
+    })
+
     this.editBtn.addEventListener("click", ()=>{
       editTask(this.editBtn,taskDOMDivs, taskDOMItems); 
+      DOMTitle.focus()
     });
-
+    
     this.deleteBtn.addEventListener("click", ()=>{
-      removeTask(taskDiv)
+      taskDiv.style.opacity =  "0"; 
+      // taskDiv.style.width = "1px"; 
+      setTimeout(() => {
+        tasksContainer.removeChild(taskDiv); 
+      }, 500);
     })
 
     DOMTaskCompleted.addEventListener("click", ()=>{ 
@@ -130,13 +142,11 @@ export default class Task {
 
     taskDiv.appendChild(DOMTaskCompleteDiv); 
     taskDiv.appendChild(DOMTitleDiv); 
-    taskDiv.appendChild(DOMDescriptionDiv);
+    // taskDiv.appendChild(DOMDescriptionDiv);
     taskDiv.appendChild(DOMDueDateDiv);
     taskDiv.appendChild(DOMPriorityDiv);
     taskDiv.appendChild(buttonsDiv); 
     
     tasksContainer.appendChild(taskDiv);
-
-    return taskDiv;
   }
 };
