@@ -39,7 +39,7 @@ body {
   display:flex;
   grid-area: content-cont; 
   scroll-behavior: smooth;
-  overflow-y: scroll;
+  /* overflow-y: scroll; */
 }
  
 /* child of .content */
@@ -76,40 +76,53 @@ body {
 }
 
 .side-bar-menu > div{
-  /* gap: 15px; */
   display: grid;
   grid-template-columns: .5fr 1fr;
-  grid-template-rows: 1fr minmax(300px, fit-content);
+ /* grid-template-rows: 1fr minmax(300px, fit-content); */
   grid-template-areas: 
   "icon name"
   "project project";
   width: initial;
+  align-items: center;
+}
+
+.active-tasks{
+  background-color: #c1c1bb;
+  border-radius: 10px;
 }
 
 .projects-all-container{
+  display: grid;
   grid-area: project;
 }
+
 #projects-hidden{
   visibility: hidden;
 }
 
 .project{
   display: grid;
+  grid-template-columns: 2fr 1fr;
+}
+
+.temp-project{
+  display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-areas: 
   "input input"
   "add delete";
 }
-.project > #project-input{
+
+.temp-project > #project-input{
   display: inline-block;
   grid-area: input;
 }
-.project > #project-add-button{
+.temp-project > #project-add-button{
   display: inline-block;
   grid-area: add;
 }
 
-.project > #project-delete-button{
+.temp-project > #project-delete-button{
   display: inline-block;
   grid-area: delete; 
 }
@@ -151,7 +164,9 @@ svg{
   width: 100%;
   row-gap: 10px;
 }
-
+.active {
+  /* just a tag*/
+}
 /* children of task-container */
 .tasks-header{
   display: flex;
@@ -170,18 +185,19 @@ svg{
   grid-auto-rows: min-content;
   row-gap: 10px;
   overflow: scroll; 
-  margin-top: 20px;
+  /* margin-top: 20px; */
   max-width: 900px;
-  transition: all 2s ease-out; 
+  transition: all 2s ease-out;
+  margin-bottom: 15px; 
 }
 
 /* children of .tasks */
 .task{
   display: grid;
-  grid-template-columns: minmax(40px, 0.25fr) repeat(4, 1fr);
+  grid-template-columns: minmax(40px, 0.25fr) repeat(3, 1fr);
   grid-template-areas: 
-  "checked title description dueDate priority"
-  ". buttons . . .";
+  "checked title dueDate priority"
+  ". buttons . .";
   margin: 20px 20px 10px 20px;
   grid-column-gap: 10px;
   grid-row-gap: 10px;
@@ -258,13 +274,13 @@ svg{
   background-color: red;
 }
 
-.description-item{
+/* .description-item{
   grid-area: description;
 }
 .description-item > textarea{
   width: 90%;
   height: 28px;
-}
+} */
 
 .dueDate-item{
   grid-area: dueDate;

@@ -25,5 +25,6 @@ module.exports = {
       "error",
       "double"
     ],
+    "no-restricted-syntax": ["error", "LabeledStatement", "WithStatement",]
   },
 };

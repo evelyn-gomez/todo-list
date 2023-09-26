@@ -1,7 +1,8 @@
 import "./styles/main.css";
 import TaskForm from "./taskForm";
 import Task from "./task";
-import { expandSideBar, collapseSideBar, createNewProjectInput, removeActiveProject} from "./utils";
+import { expandSideBar, collapseSideBar, createNewProjectInput, removeActiveProject, taskTester, taskTester2, } from "./utils";
+import Storage from "./storage";
 
 class DOM {
   constructor(){
@@ -17,18 +18,17 @@ class DOM {
     this.sidebarContainer = document.querySelector(".side-bar-main"); 
     this.sidebarIcon = document.querySelector(".side-bar-icon"); 
     this.sidebarMenu = document.querySelector(".side-bar-menu");
-    this.sideBarTodayTasks = this.sidebarMenu.querySelector(".today-tasks svg"); 
+    this.sideBarInboxTasks = this.sidebarMenu.querySelector(".inbox-tasks svg"); 
     this.sideBarWeeklyTask = this.sidebarMenu.querySelector(".weekly-tasks svg"); 
     this.sideBarProjects = this.sidebarMenu.querySelector(".projects svg");
     this.projectsParent = document.querySelector(".projects-all-container") 
   }
 
   /**
-   * @param {import("./form").TaskParams} taskParams 
+   * @param {import("./taskForm").TaskParams} taskParams 
    */
-  addTask({ title, dueDate, priority }){
-    const task = new Task(title, dueDate, priority);
-    task.addToDOM();
+  addTask({ title, dueDate, priority, done }){
+    Storage.addTasks({ title, dueDate, priority, done });
     this.closeModal()
   }
 
@@ -68,14 +68,19 @@ class DOM {
         expandSideBar(icon, this.sidebarContainer); 
         return;
       }if(this.projectsParent.classList.contains("active")){
-        return;
+        removeActiveProject(this.projectsParent); 
       }
       collapseSideBar(icon, this.sidebarContainer); 
     })
-    this.sideBarTodayTasks.addEventListener("click",()=>{
-      console.log("hi, clicked tpdau task"); 
+    this.sideBarInboxTasks.addEventListener("click",()=>{
+      if(this.projectsParent.classList.contains("active")){
+        removeActiveProject(this.projectsParent);
+      }
     })
     this.sideBarWeeklyTask.addEventListener("click", ()=>{
+      if(this.projectsParent.classList.contains("active")){
+        removeActiveProject(this.projectsParent);
+      }
       console.log("weekly tasks");
     });
     this.sideBarProjects.addEventListener("click",()=>{
@@ -83,12 +88,15 @@ class DOM {
       if(icon.classList.contains("collapse-icon")){
         expandSideBar(icon, this.sidebarContainer)
       }else if(this.projectsParent.classList.contains("active")){
-        // basically need to do nothing but need newProjectInput.focus() -cant access it so would need like a promise? 
+        //  
         return;
-      }
-      createNewProjectInput();  
+      } 
+      createNewProjectInput();    
     })
-   
+    window.addEventListener("beforeunload", () => {
+      Storage.store();
+      console.log("refresing"); 
+    })
  }
 
 }

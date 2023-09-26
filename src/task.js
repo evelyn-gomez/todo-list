@@ -2,11 +2,12 @@ import "./styles/main.css";
 import editTask, { setDueDate, convertDueDateFormat, priorities as PRIORITIES, taskClassesforItems as TASK_CLASSES_FOR_ITEMS } from "./utils";
 
 export default class Task {
-  constructor(title, dueDate, priority ) {
+  constructor(title, dueDate, priority, done) {
     this.title = title;
     // this.description = description;
     this.dueDate = setDueDate(dueDate); 
     this.priority = priority; 
+    this.done = done;
   }
 
   addToDOM(){
@@ -120,7 +121,6 @@ export default class Task {
     
     this.deleteBtn.addEventListener("click", ()=>{
       taskDiv.style.opacity =  "0"; 
-      // taskDiv.style.width = "1px"; 
       setTimeout(() => {
         tasksContainer.removeChild(taskDiv); 
       }, 500);
@@ -142,7 +142,6 @@ export default class Task {
 
     taskDiv.appendChild(DOMTaskCompleteDiv); 
     taskDiv.appendChild(DOMTitleDiv); 
-    // taskDiv.appendChild(DOMDescriptionDiv);
     taskDiv.appendChild(DOMDueDateDiv);
     taskDiv.appendChild(DOMPriorityDiv);
     taskDiv.appendChild(buttonsDiv); 

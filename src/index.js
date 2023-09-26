@@ -1,7 +1,12 @@
 import "./styles/main.css";
 import dom from "./DOM";
+import Storage from "./storage";
 
-dom.initialListeners();
+document.addEventListener("DOMContentLoaded", ()=>{
+  dom.initialListeners();
+  Storage.load();
+})
+
 
 
 // const button = document.querySelector(".open-modal button");

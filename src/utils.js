@@ -1,7 +1,7 @@
 import { DateTime } from "luxon";
-import Project from "./projects";
+import Project from "./project";
 
-export const taskClassesforItems = ["check-item", "title-item", "description-item", "dueDate-item", "priority-item"]; 
+export const taskClassesforItems = ["check-item", "title-item", "dueDate-item", "priority-item"]; 
 export const priorities = ["","low", "medium", "high"];
 
 export function setDueDate(date){
@@ -31,7 +31,7 @@ export function convertDueDateFormat(inputDate){
   return updatedDate; 
 }
 
-export const headersOfMenu = ["Today", "This Week", "Projects"]; 
+export const headersOfMenu = ["Inbox", "This Week", "Projects"]; 
 
 export function addHeadersofMenu(childrenofMenu){
   // eslint-disable-next-line no-plusplus
@@ -48,14 +48,6 @@ export function removeHeadersOfMenu(childrenofMenu){
   }
 }
 
-export function removeFadeOut(el, time) {
-
-  // setTimeout(() => {
-  //     // eslint-disable-next-line no-param-reassign
-  //   console.log("hello from fade");
-  //     el.parentNode.removeChild(el);
-  // }, time);
-}
 function isTitle(taskTitle){
   const minLength = taskTitle.getAttribute("minlength");
   const maxlength = taskTitle.getAttribute("maxlength"); 
@@ -108,16 +100,23 @@ export default function editTask(editBtn, taskDOMDivs, taskDOMItems){
       }else if(!item.hasAttribute("disabled")){
         item.setAttribute("disabled","disabled"); 
       }
-    })
+    });
+    // update Storage.inbox
+    // call Storage.store()
   }
 }
 
 export const taskTester = {
   title: "tester_title",
-  description: "", 
   dueDate: "9/12/2023", 
   priority: "low", 
 }
+export const taskTester2 = {
+  title: "tester-2", 
+  dueDate: "9/27/23", 
+  priority: "low",
+  done: true,
+};
 export function removeActiveProject(projectsParent){
   const projectsCollection = projectsParent.children; 
   const projectsArray = Array.from(projectsCollection); 
@@ -132,7 +131,7 @@ function createTempProject() {
   const addBtn = document.createElement("button"); 
   const deleteBtn = document.createElement("button"); 
   
-  div.classList.add("project"); 
+  div.classList.add("temp-project"); 
   div.classList.add("active");  
 
   input.id = "project-input"; 
@@ -141,8 +140,6 @@ function createTempProject() {
 
   addBtn.textContent = "Add"; 
   deleteBtn.textContent = "Delete";
-
-  input.focus();
 
   div.appendChild(input); 
   div.appendChild(addBtn); 
@@ -156,14 +153,15 @@ export function createNewProjectInput(){
   projectsParent.classList.add("active");
   
   const tempProject = createTempProject();
-
   projectsParent.appendChild(tempProject.div); 
 
   tempProject.addBtn.addEventListener("click",(e)=>{;
     tempProject.div.classList.remove("active"); 
     projectsParent.classList.remove("active"); 
+    projectsParent.removeChild(tempProject.div);
+    const newProject = new Project(tempProject.input.value);
     // add project to storage
-    // add project to DOM
+    newProject.setInDOM(projectsParent); 
     e.preventDefault();
   });
 
@@ -172,6 +170,19 @@ export function createNewProjectInput(){
     projectsParent.classList.remove("active"); 
     e.preventDefault(); 
   })
+  tempProject.div.addEventListener("keyup", (e)=>{
+    e.preventDefault(); 
+    if(e.key === "Enter"){
+      tempProject.div.classList.remove("active"); 
+      projectsParent.classList.remove("active"); 
+      projectsParent.removeChild(tempProject.div);
+      // add project to storage
+      // keep project in DOM
+      const newProject = new Project(tempProject.input.value);
+      newProject.setInDOM(projectsParent); 
+    }
+  })
+  tempProject.input.focus()
 }
 
 export function expandSideBar(icon, sideBarContainer){
@@ -194,4 +205,10 @@ export function collapseSideBar(icon,sideBarContainer){
   removeHeadersOfMenu(childrenofMenu);
 }
 
+export function getAllProjects(projectParent){
+  if(projectParent.firstElementChild){
+    return true;
+  }
+  return false
+}
 
