@@ -1,7 +1,8 @@
+import Project from "./project";
 import Task from "./task";
 
-/** @typedef {{ title: string; dueDate: string; priority: string; done: boolean; }} Task */
-/** @typedef {{ name: string; tasks: Task[] }} Project */
+/** @typedef {{ id: string; title: string; dueDate: string; priority: string; done: boolean; }} TaskParams */
+/** @typedef {{ name: string; tasks: TaskParams[] }} Project */
 
 export default class Storage {
   static key = "stored";
@@ -13,12 +14,14 @@ export default class Storage {
   static projects = [];
 
   static store() {
-    const { inbox, projects } = this;
+    const inbox = this.inbox.map(task => task.serialize());
+    const projects = this.projects.map(proj => proj.serialize());
     console.log(inbox, projects);
     localStorage.setItem(this.key, JSON.stringify({ inbox, projects }));
   }
 
   static load() {
+    // localStorage.clear();
     const data = JSON.parse(localStorage.getItem(this.key));
     if (data) {
       console.log(data.inbox);
@@ -27,16 +30,29 @@ export default class Storage {
     }
   }
 
-  static addTasks(...tasks) {
-    for (const task of tasks) {
+  static addTasks(...taskParams) {
+    for (const params of taskParams) {
+      const task = new Task(params);
       this.inbox.push(task);
-      new Task(task.title, task.dueDate, task.priority, task.done).addToDOM();
+      task.addToDOM();
     }
-    console.log(this.inbox);
+    this.store();
+  }
+
+  /**
+   * @param {Task} task 
+   * @param {TaskParams} params 
+   */
+  static updateTask(task, params) {
+    task.update(params);
+    this.store();
   }
 
   static addProjects(...projects) {
-    this.projects.concat(projects);
+    for (const proj of projects) {
+      this.projects.push(proj);
+      // new Project(proj.name, proj.tasks).addToDOM();
+    }
   }
 };
 

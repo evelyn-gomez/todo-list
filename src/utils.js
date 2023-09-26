@@ -1,5 +1,6 @@
 import { DateTime } from "luxon";
 import Project from "./project";
+import Storage from "./storage";
 
 export const taskClassesforItems = ["check-item", "title-item", "dueDate-item", "priority-item"]; 
 export const priorities = ["","low", "medium", "high"];
@@ -71,40 +72,41 @@ function taskEditing(taskDOMItems){
 /* eslint-disable no-param-reassign */
 /**
  * 
- * @param {Element} editBtn
+ * @param {Element} toggleEditBtn
  * @param {HTMLCollectionBase} taskDOMDivs
  * @param {HTMLAllCollection} taskDOMItems
  */
-export default function editTask(editBtn, taskDOMDivs, taskDOMItems){
+export function enableEditing(toggleEditBtn, taskDOMDivs, taskDOMItems){
   const taskTitleDiv = taskDOMDivs.find(item => item.classList.contains("title-item")); 
   const titleLabel = taskTitleDiv.querySelector("label"); 
   const taskDiv = taskTitleDiv.parentElement;
-  if(editBtn.textContent === "Edit" ){
-    taskDiv.classList.add("editing"); 
-    /** TASKDIV will have transform transition to allow it to look like its been edited */
-    titleLabel.textContent = "Title must be between 2 - 22 characters";  
-    editBtn.textContent = "Save"; 
-    taskEditing(taskDOMItems); 
-  } else{
-    if(!isTitle(taskTitleDiv.querySelector("input"))){
-      // taskDiv.classList.remove("editing");
-      return; 
-    }
-    editBtn.textContent = "Edit"
-    taskDiv.classList.remove("editing"); 
-    titleLabel.textContent = ""; 
-    taskDOMItems.forEach(item =>{
-      item.classList.remove("edit"); 
-      if(!item.hasAttribute("readonly")){
-        item.setAttribute("readonly","readonly");
-      }else if(!item.hasAttribute("disabled")){
-        item.setAttribute("disabled","disabled"); 
-      }
-    });
-    // update Storage.inbox
-    // call Storage.store()
-  }
+  taskDiv.classList.add("editing"); 
+  /** TASKDIV will have transform transition to allow it to look like its been edited */
+  titleLabel.textContent = "Title must be between 2 - 22 characters";  
+  toggleEditBtn.textContent = "Save"; 
+  taskEditing(taskDOMItems); 
 }
+
+export function disableEditing(toggleEditBtn, taskDOMDivs, taskDOMItems){
+  const taskTitleDiv = taskDOMDivs.find(item => item.classList.contains("title-item")); 
+  const titleLabel = taskTitleDiv.querySelector("label"); 
+  const taskDiv = taskTitleDiv.parentElement;
+  if(!isTitle(taskTitleDiv.querySelector("input"))){
+    // taskDiv.classList.remove("editing");
+    return; 
+  }
+  toggleEditBtn.textContent = "Edit"
+  taskDiv.classList.remove("editing"); 
+  titleLabel.textContent = ""; 
+  taskDOMItems.forEach(item =>{
+    item.classList.remove("edit"); 
+    if(!item.hasAttribute("readonly")){
+      item.setAttribute("readonly","readonly");
+    }else if(!item.hasAttribute("disabled")){
+      item.setAttribute("disabled","disabled"); 
+    }
+  });
+} 
 
 export const taskTester = {
   title: "tester_title",

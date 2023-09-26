@@ -1,7 +1,7 @@
 /* eslint-disable class-methods-use-this */
 import "./styles/main.css"
 
-/** @typedef {{ title: string; dueDate: string; priority: string; done: boolean; }} TaskParams */
+/** @typedef {{ id: number; title: string; dueDate: string; priority: string; done: boolean; }} TaskParams */
 
 export default class TaskForm {
 

@@ -1,11 +1,18 @@
+/** @typedef {import("./taskForm").TaskParams} TaskParams */
+
 export default class Project {
-  constructor(name){
+  /**
+   * 
+   * @param {string} name 
+   * @param {{ tasks?: TaskParams[] }} options
+   */
+  constructor(name, { tasks = [] } = {}){
    this.name = name 
-   this.tasks = []; 
+   this.tasks = tasks; 
   }
   
   getName(){
-   return this.name; 
+    return this.name; 
   }
  
   setAllTasks(tasks){

@@ -93,11 +93,7 @@ class DOM {
       } 
       createNewProjectInput();    
     })
-    window.addEventListener("beforeunload", () => {
-      Storage.store();
-      console.log("refresing"); 
-    })
- }
+  }
 
 }
 

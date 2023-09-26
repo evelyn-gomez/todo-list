@@ -1,12 +1,42 @@
+import Storage from "./storage";
 import "./styles/main.css";
-import editTask, { setDueDate, convertDueDateFormat, priorities as PRIORITIES, taskClassesforItems as TASK_CLASSES_FOR_ITEMS } from "./utils";
+import { enableEditing, setDueDate, convertDueDateFormat, priorities as PRIORITIES, taskClassesforItems as TASK_CLASSES_FOR_ITEMS, disableEditing } from "./utils";
+
+let taskId = 1;
+function nextTaskId() {
+  taskId += 1;
+  return taskId;
+}
+
+/** @typedef {import("./taskForm").TaskParams} TaskParams */
 
 export default class Task {
-  constructor(title, dueDate, priority, done) {
+  /**
+   * @param {TaskParams} params 
+   */
+  constructor({ id = nextTaskId(), title, dueDate, priority, done }) {
+    this.id = id;
     this.title = title;
-    // this.description = description;
     this.dueDate = setDueDate(dueDate); 
     this.priority = priority; 
+    this.done = done;
+  }
+  
+  /**
+   * @returns {object}
+   */
+  serialize() {
+    const { title, dueDate, priority, done } = this;
+    return { title, dueDate, priority, done };
+  }
+
+  /**
+   * @param {TaskParams} params 
+   */
+  update({ title, dueDate, priority, done }) {
+    this.title = title;
+    this.dueDate = dueDate;
+    this.priority = priority;
     this.done = done;
   }
 
@@ -95,28 +125,41 @@ export default class Task {
       } 
     })
 
-    this.editBtn = document.createElement("button");
-    this.editBtn.classList.add("edit-btn")
-    this.editBtn.textContent = "Edit"; 
+    this.toggleEditBtn = document.createElement("button");
+    this.toggleEditBtn.classList.add("edit-btn")
+    this.toggleEditBtn.textContent = "Edit"; 
 
     this.deleteBtn = document.createElement("button"); 
     this.deleteBtn.classList.add("delete-btn")
     this.deleteBtn.textContent = "Delete"; 
 
-    buttonsDiv.appendChild(this.editBtn);
+    buttonsDiv.appendChild(this.toggleEditBtn);
     buttonsDiv.appendChild(this.deleteBtn); 
 
     taskDiv.addEventListener("keyup", (e)=>{
       if(e.key === "Enter"){
         e.preventDefault(); 
-        editTask(this.editBtn,taskDOMDivs,taskDOMItems);
+        disableEditing(this.toggleEditBtn,taskDOMDivs,taskDOMItems);
         DOMTitle.focus()
       }
     })
 
-    this.editBtn.addEventListener("click", ()=>{
-      editTask(this.editBtn,taskDOMDivs, taskDOMItems); 
-      DOMTitle.focus()
+    this.toggleEditBtn.addEventListener("click", ()=>{
+      if (this.isEditing) {
+        disableEditing(this.toggleEditBtn, taskDOMDivs, taskDOMItems);
+        const params = {
+          title: DOMTitle.value,
+          dueDate: DOMDueDate.value,
+          priority: DOMPriority.value,
+          done: DOMTaskCompleted.checked,
+        }
+        Storage.updateTask(this, params);
+        this.isEditing = false;
+      } else {
+        enableEditing(this.toggleEditBtn, taskDOMDivs, taskDOMItems); 
+        DOMTitle.focus()
+        this.isEditing = true;
+      }
     });
     
     this.deleteBtn.addEventListener("click", ()=>{
