@@ -70,20 +70,49 @@ body {
   width: fit-content;
 }
 
-.side-bar-menu{
-  display: grid;
-  gap: 20px;
+.side-bar-menu {
+  display: flex;
+  flex-direction: column;
+  grid-area: 10px;
 }
 
-.side-bar-menu > div{
+.side-bar-menu > #inbox{
   display: grid;
-  grid-template-columns: .5fr 1fr;
+  grid-template-columns: .35fr 1fr;
  /* grid-template-rows: 1fr minmax(300px, fit-content); */
-  grid-template-areas: 
-  "icon name"
-  "project project";
   width: initial;
   align-items: center;
+}
+.side-bar-menu > #weekly{
+  display: grid;
+  grid-template-columns: .35fr 1fr;
+  width: initial;
+  align-items: center;
+}
+
+.side-bar-menu > .projects {
+  display: grid;
+  grid-template-columns: .35fr 1fr;
+  width: initial;
+  align-items: center;
+}
+
+.projects-all-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  /* justify-content: center; */
+}
+
+button.add-project-button {
+  padding-bottom: 5px;
+  display: flex;
+  width: 35px;
+  height: 35px;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
 }
 
 .active-tasks{
@@ -91,13 +120,10 @@ body {
   border-radius: 10px;
 }
 
-.projects-all-container{
-  display: grid;
-  grid-area: project;
-}
 
 #projects-hidden{
   visibility: hidden;
+  display: none;
 }
 
 .project{
@@ -125,18 +151,6 @@ body {
 .temp-project > #project-delete-button{
   display: inline-block;
   grid-area: delete; 
-}
-.side-bar-menu > div > p{
-  font-size: 20px;
-  grid-area: name;
-}
-
-.sideBar-menu-button{
- border: none; 
- background-color: transparent;
- grid-area: icon;
- max-width: 50px;
- max-height: 50px;
 }
 
 /*change the sidebar icon*/

@@ -1,6 +1,4 @@
 import { DateTime } from "luxon";
-import Project from "./project";
-import Storage from "./storage";
 
 export const taskClassesforItems = ["check-item", "title-item", "dueDate-item", "priority-item"]; 
 export const priorities = ["","low", "medium", "high"];
@@ -32,20 +30,18 @@ export function convertDueDateFormat(inputDate){
   return updatedDate; 
 }
 
-export const headersOfMenu = ["Inbox", "This Week", "Projects"]; 
+export const headersOfMenu = ["Inbox", "Weekly", "Projects"]; 
 
 export function addHeadersofMenu(childrenofMenu){
-  // eslint-disable-next-line no-plusplus
   for(let i=0; i < childrenofMenu.length; i++){
-    const child = childrenofMenu[i];
-    child.querySelector("p").textContent = headersOfMenu[i]; 
+    const child = childrenofMenu[i]; 
+    child.querySelector("h3").textContent = headersOfMenu[i]; 
   }
 }
 
 export function removeHeadersOfMenu(childrenofMenu){
-  for(let i=0; i < childrenofMenu.length; i++){
-    const child = childrenofMenu[i];
-    child.querySelector("p").textContent = ""; 
+  for(const child of childrenofMenu){
+    child.querySelector("h3").textContent = ""; 
   }
 }
 
@@ -105,6 +101,8 @@ export function disableEditing(toggleEditBtn, taskDOMDivs, taskDOMItems){
     }else if(!item.hasAttribute("disabled")){
       item.setAttribute("disabled","disabled"); 
     }
+    // item.removeAttribute("readonly", "readonly"); 
+    // item.removeAttribute("disabled", "disabled"); 
   });
 } 
 
@@ -113,18 +111,82 @@ export const taskTester = {
   dueDate: "9/12/2023", 
   priority: "low", 
 }
-export const taskTester2 = {
-  title: "tester-2", 
-  dueDate: "9/27/23", 
-  priority: "low",
-  done: true,
-};
+
 export function removeActiveProject(projectsParent){
   const projectsCollection = projectsParent.children; 
   const projectsArray = Array.from(projectsCollection); 
   const activeElement = projectsArray.find(element => element.classList.contains("active"))
   projectsParent.removeChild(activeElement); 
   projectsParent.classList.remove("active"); 
+}
+
+export function getCurrentOption(){
+  const sideMenuOptions = Array.from(document.querySelector(".side-bar-menu").children);
+  const projectMenuOptions = Array.from(document.querySelector(".projects-added").children); 
+  let currentOption; 
+
+  for(const option of sideMenuOptions){
+    if(!option.classList.contains("projects")){
+      if(option.classList.contains("active-tasks")){
+        currentOption = option; 
+        return currentOption; 
+      }
+    }
+  }
+  if(projectMenuOptions.length >=1){
+    for(const option of projectMenuOptions){
+      if(option.classList.contains("active-tasks")){
+        currentOption = option; 
+        return currentOption; 
+      }
+    }
+  }
+  currentOption = undefined; 
+  return currentOption; 
+
+}
+/**
+ * 
+ * @param {Element} selectedOption 
+ * @returns 
+ */
+export function setSideBarOption(activeSideBar){
+  // what is activeSideBar 
+  // get what is the currentOptionSelected; 
+  const currentOption = getCurrentOption();
+
+  currentOption.classList.remove("active-tasks"); 
+  activeSideBar.classList.add("active-tasks");
+} 
+
+
+export function disableProjectInput(projectsParentElem){
+  if(projectsParentElem.classList.contains("active")){
+    removeActiveProject(projectsParentElem);
+  }
+}
+
+export function getAllProjects(projectParent){
+  if(projectParent.firstElementChild){
+    return true;
+  }
+  return false
+}
+
+
+export function updateCheckedStatusClass(DOMTaskCompleted, taskDOMItems){
+  if(DOMTaskCompleted.checked){
+    DOMTaskCompleted.classList.add("green");
+    taskDOMItems.forEach(item =>{
+      item.classList.add("completed-task"); 
+    })
+  }else{
+    // else if(taskDOMItems[0].classList.contains("completed-task"))
+    DOMTaskCompleted.classList.remove("green"); 
+    taskDOMItems.forEach(item =>{
+      item.classList.remove("completed-task"); 
+    })
+  }
 }
 
 function createTempProject() {
@@ -151,66 +213,59 @@ function createTempProject() {
 }
 
 export function createNewProjectInput(){
-  const projectsParent = document.querySelector(".projects-all-container"); 
+  const projectsParent = document.querySelector(".projects-added"); 
   projectsParent.classList.add("active");
-  
-  const tempProject = createTempProject();
-  projectsParent.appendChild(tempProject.div); 
 
-  tempProject.addBtn.addEventListener("click",(e)=>{;
-    tempProject.div.classList.remove("active"); 
+  const tempDOMProject = createTempProject();
+  projectsParent.appendChild(tempDOMProject.div); 
+
+
+  tempDOMProject.addBtn.addEventListener("click",(e)=>{;
+    tempDOMProject.div.classList.remove("active"); 
     projectsParent.classList.remove("active"); 
-    projectsParent.removeChild(tempProject.div);
-    const newProject = new Project(tempProject.input.value);
-    // add project to storage
-    newProject.setInDOM(projectsParent); 
+    projectsParent.removeChild(tempDOMProject.div);
     e.preventDefault();
   });
 
-  tempProject.deleteBtn.addEventListener("click", (e)=>{
-    projectsParent.removeChild(tempProject.div);  
+  tempDOMProject.deleteBtn.addEventListener("click", (e)=>{
+    projectsParent.removeChild(tempDOMProject.div);  
     projectsParent.classList.remove("active"); 
     e.preventDefault(); 
   })
-  tempProject.div.addEventListener("keyup", (e)=>{
+  tempDOMProject.div.addEventListener("keyup", (e)=>{
     e.preventDefault(); 
     if(e.key === "Enter"){
-      tempProject.div.classList.remove("active"); 
+      tempDOMProject.div.classList.remove("active"); 
       projectsParent.classList.remove("active"); 
-      projectsParent.removeChild(tempProject.div);
-      // add project to storage
-      // keep project in DOM
-      const newProject = new Project(tempProject.input.value);
-      newProject.setInDOM(projectsParent); 
+      projectsParent.removeChild(tempDOMProject.div);
     }
   })
-  tempProject.input.focus()
+  tempDOMProject.input.focus()
+  return tempDOMProject; 
 }
 
 export function expandSideBar(icon, sideBarContainer){
-  const menuDiv = sideBarContainer.querySelector(".side-bar-menu"); 
-  const projectMenu = menuDiv.querySelector(".projects div"); 
-  const childrenofMenu = menuDiv.children;
+  const allOptionsOfSideMenu = Array.from(sideBarContainer.querySelector(".side-bar-menu").children); 
+  const selectableOptions = allOptionsOfSideMenu.filter(option => !option.classList.contains("projects-all-container")); 
+  const mainProjects = sideBarContainer.querySelector(".projects-all-container"); 
+  
+  mainProjects.removeAttribute("id", "projects-hidden"); 
   sideBarContainer.classList.remove("collapse"); 
   icon.classList.remove("collapse-icon");
-  projectMenu.removeAttribute("id","projects-hidden"); 
-  addHeadersofMenu(childrenofMenu);
+  // projectsCreated.removeAttribute("id","projects-hidden"); 
+  addHeadersofMenu(selectableOptions);
 }
 
 export function collapseSideBar(icon,sideBarContainer){
-  const menuDiv = sideBarContainer.querySelector(".side-bar-menu"); 
-  const projectMenu = menuDiv.querySelector(".projects div"); 
-  const childrenofMenu = menuDiv.children;
+  const allOptionsOfSideMenu = Array.from(sideBarContainer.querySelector(".side-bar-menu").children); 
+  const selectableOptions = allOptionsOfSideMenu.filter(option => !option.classList.contains("projects-all-container")); 
+  const mainProjects = sideBarContainer.querySelector(".projects-all-container"); 
+
+  mainProjects.id = "projects-hidden"; 
   sideBarContainer.classList.add("collapse");
   icon.classList.add("collapse-icon");
-  projectMenu.setAttribute("id","projects-hidden"); 
-  removeHeadersOfMenu(childrenofMenu);
-}
+  removeHeadersOfMenu(selectableOptions);
 
-export function getAllProjects(projectParent){
-  if(projectParent.firstElementChild){
-    return true;
-  }
-  return false
+  
 }
 

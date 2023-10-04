@@ -35,7 +35,7 @@ export default class TaskForm {
       const dueDate = this.dueDateInput.value; 
       const priority = this.priorityInput.value; 
       this.onSubmit({
-        title, dueDate, priority
+        title, dueDate, priority,
       }); 
       this.reset(); 
     });

@@ -1,8 +1,8 @@
-import Storage from "./storage";
 import "./styles/main.css";
-import { enableEditing, setDueDate, convertDueDateFormat, priorities as PRIORITIES, taskClassesforItems as TASK_CLASSES_FOR_ITEMS, disableEditing } from "./utils";
+import Storage from "./storage";
+import { enableEditing, setDueDate, convertDueDateFormat, priorities as PRIORITIES, taskClassesforItems as TASK_CLASSES_FOR_ITEMS, disableEditing, updateCheckedStatusClass } from "./utils";
 
-let taskId = 1;
+let taskId = 0;
 function nextTaskId() {
   taskId += 1;
   return taskId;
@@ -19,14 +19,18 @@ export default class Task {
     this.title = title;
     this.dueDate = setDueDate(dueDate); 
     this.priority = priority; 
-    this.done = done;
+    if(done === undefined ){
+      this.done = false; 
+    }else{
+      this.done = done; 
+    }
   }
-  
+
   /**
    * @returns {object}
    */
   serialize() {
-    const { title, dueDate, priority, done } = this;
+    const { title, dueDate, priority, done } = this; 
     return { title, dueDate, priority, done };
   }
 
@@ -37,7 +41,7 @@ export default class Task {
     this.title = title;
     this.dueDate = dueDate;
     this.priority = priority;
-    this.done = done;
+    this.done = done; 
   }
 
   addToDOM(){
@@ -53,16 +57,10 @@ export default class Task {
     DOMTaskCompleted.type = "checkbox";  
     DOMTaskCompletedLabel.setAttribute("for", "checkbox"); 
 
-     
-
     const DOMTitleDiv = document.createElement("div"); 
     DOMTitleDiv.setAttribute("class", TASK_CLASSES_FOR_ITEMS[1]); 
     const DOMTitleLabel = document.createElement("label");
     const DOMTitle = document.createElement("input");
-    
-    // const DOMDescriptionDiv = document.createElement("div"); 
-    // const DOMDescriptionLabel = document.createElement("label"); 
-    // const DOMDescription = document.createElement("textarea");
     
     const DOMDueDateDiv = document.createElement("div");
     const DOMDueDateLabel = document.createElement("label"); 
@@ -77,9 +75,6 @@ export default class Task {
 
     DOMTitleDiv.appendChild(DOMTitleLabel); 
     DOMTitleDiv.appendChild(DOMTitle); 
-
-    // DOMDescriptionDiv.appendChild(DOMDescriptionLabel);
-    // DOMDescriptionDiv.appendChild(DOMDescription); 
 
     DOMDueDateDiv.appendChild(DOMDueDateLabel); 
     DOMDueDateDiv.appendChild(DOMDueDate); 
@@ -104,15 +99,12 @@ export default class Task {
     DOMTitle.setAttribute("required", "true"); 
     DOMTitle.setAttribute("minlength", "2");
     DOMTitle.setAttribute("maxlength", "20"); 
-    // DOMDescription.setAttribute("readonly", "readonly")
-    // DOMDescription.setAttribute("rows", "10"); 
-    // DOMDescription.setAttribute("cols", "50");  
+
     DOMDueDate.setAttribute("readonly", "readonly"); 
     DOMPriority.setAttribute("disabled","disabled"); 
     
     DOMTitle.textContent = this.title;
     DOMTitle.value = DOMTitle.textContent; 
-    // DOMDescription.textContent = this.description;
     DOMDueDate.value = convertDueDateFormat(this.dueDate);
 
     PRIORITIES.forEach(priority =>{
@@ -133,16 +125,16 @@ export default class Task {
     this.deleteBtn.classList.add("delete-btn")
     this.deleteBtn.textContent = "Delete"; 
 
+
     buttonsDiv.appendChild(this.toggleEditBtn);
     buttonsDiv.appendChild(this.deleteBtn); 
 
-    taskDiv.addEventListener("keyup", (e)=>{
-      if(e.key === "Enter"){
-        e.preventDefault(); 
-        disableEditing(this.toggleEditBtn,taskDOMDivs,taskDOMItems);
-        DOMTitle.focus()
-      }
-    })
+    // taskDiv.addEventListener("keyup", (e)=>{
+    //   if(e.key === "Enter"){
+    //     // e.preventDefault(); 
+    //     disableEditing(this.toggleEditBtn,taskDOMDivs,taskDOMItems);
+    //   }
+    // })
 
     this.toggleEditBtn.addEventListener("click", ()=>{
       if (this.isEditing) {
@@ -165,23 +157,26 @@ export default class Task {
     this.deleteBtn.addEventListener("click", ()=>{
       taskDiv.style.opacity =  "0"; 
       setTimeout(() => {
+        Storage.deleteTask(this);
         tasksContainer.removeChild(taskDiv); 
       }, 500);
     })
-
+   
     DOMTaskCompleted.addEventListener("click", ()=>{ 
-      if(!DOMTaskCompleted.classList.contains("green")){ 
-        DOMTaskCompleted.classList.add("green"); 
-        taskDOMItems.forEach(item =>{
-          item.classList.add("completed-task"); 
-        })
-      } else if(taskDOMItems[0].classList.contains("completed-task")) {
-        DOMTaskCompleted.classList.remove("green"); 
-        taskDOMItems.forEach(item =>{
-          item.classList.remove("completed-task"); 
-        })
+      updateCheckedStatusClass(DOMTaskCompleted, taskDOMItems);
+      const params = {
+        title: DOMTitle.value,
+        dueDate: DOMDueDate.value,
+        priority: DOMPriority.value,
+        done: DOMTaskCompleted.checked
       }
+      Storage.updateTask(this,params)
     })
+
+    if(this.done && DOMTaskCompleted.checked === false){
+      DOMTaskCompleted.checked = true; 
+      updateCheckedStatusClass(DOMTaskCompleted, taskDOMItems);
+    }
 
     taskDiv.appendChild(DOMTaskCompleteDiv); 
     taskDiv.appendChild(DOMTitleDiv); 
