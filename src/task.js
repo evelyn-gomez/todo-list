@@ -11,10 +11,11 @@ function nextTaskId() {
 /** @typedef {import("./taskForm").TaskParams} TaskParams */
 
 export default class Task {
+
   /**
    * @param {TaskParams} params 
    */
-  constructor({ id = nextTaskId(), title, dueDate, priority, done }) {
+  constructor({ id = nextTaskId(), title, dueDate, priority, done, }) {
     this.id = id;
     this.title = title;
     this.dueDate = setDueDate(dueDate); 
@@ -30,8 +31,13 @@ export default class Task {
    * @returns {object}
    */
   serialize() {
-    const { title, dueDate, priority, done } = this; 
-    return { title, dueDate, priority, done };
+    // if(project === undefined){
+    //   this.project = "inbox"; 
+    // }else{
+    //   this.project = project; 
+    // }
+    const { title, dueDate, priority, done,} = this; 
+    return { title, dueDate, priority, done};
   }
 
   /**
@@ -46,6 +52,7 @@ export default class Task {
 
   addToDOM(){
     const tasksContainer = document.querySelector(".tasks"); 
+ 
     const taskDiv = document.createElement("div"); 
     taskDiv.classList.add("task"); 
     const buttonsDiv = document.createElement("div"); 

@@ -1,5 +1,4 @@
 import Task from "./task";
-import { getCurrentOption } from "./utils";
 import Project from "./project";
 
 /** @typedef {{ id: string; title: string; dueDate: string; priority: string; done: boolean; }} TaskParams */
@@ -15,8 +14,8 @@ export default class Storage {
   static projects = [];
 
   static store() {
+    const projects = this.projects.map(proj =>  proj.serialize());
     const inbox = this.inbox.map(task => task.serialize()); 
-    const projects = this.projects.map(proj => proj.serialize());
     localStorage.setItem(this.key, JSON.stringify({ inbox, projects}));
     console.log(inbox, projects, "storage.store");
   }
@@ -26,23 +25,19 @@ export default class Storage {
     const data = JSON.parse(localStorage.getItem(this.key));
     if (data) {
       console.log(data.inbox, "storage.load");
-      this.addTasks(...data.inbox);
-      // this.addProjects(...data.projects);
+      this.addInboxTasks(...data.inbox);
+      this.addProjects(...data.projects);
     }
+    // setDefaultInboxTasks(); 
   }
 
-  static addTasks(...taskParams) {
-    const inboxOrProject = getCurrentOption();
-    if(inboxOrProject.id === "inbox"){
-      for (const params of taskParams) {
-        const task = new Task(params);
-        // add to inbox or project? 
-        this.inbox.push(task);
-        task.addToDOM();
-      }
-      this.store();
+  static addInboxTasks(...taskParams){
+    for(const params of taskParams){
+      const task = new Task(params);
+      this.inbox.push(task);
+      task.addToDOM();
     }
-    console.log(inboxOrProject.id); 
+    this.store();
   }
 
   /**
@@ -51,7 +46,7 @@ export default class Storage {
    */
   static updateTask(task, params) { 
     task.update(params);
-    this.store(task)
+    this.store()
   }
 
   /**
@@ -65,12 +60,36 @@ export default class Storage {
    this.store();
   }
 
-  // static addTasksToProject(){
-     
+  /**
+   * 
+   * @param {Project} project 
+   */
+  static addProject(project){
+    this.projects.push(project); 
+    this.store()
+  }
+
+  // static addProjectTasks(project, ...taskParams){
+  //   for(const params of taskParams){
+  //     const task = new Task(params); 
+  //     console.log(task); 
+  //     const activeProject = this.projects.find(proj => proj === project);
+  //     activeProject.setTask(task); 
+  //   }
+  //   this.store(); 
   // }
 
-  static addProject(proj){
-    this.projects.push(proj); 
+  static addProjects(...projects){
+    for(const proj of projects){
+      const project = new Project(proj.name); 
+      project.addToDOM(); 
+      this.projects.push(project);
+      const allTask = project.getAllTasks();
+      if(allTask.length >=1){
+        this.addProjectTasks(project.tasks, project)
+      }
+    }
+    this.store()
   }
 
   // static updateProject(project, {tasks, params}){

@@ -156,9 +156,27 @@ export function setSideBarOption(activeSideBar){
   const currentOption = getCurrentOption();
 
   currentOption.classList.remove("active-tasks"); 
-  activeSideBar.classList.add("active-tasks");
+  activeSideBar.classList.add("active-tasks"); 
 } 
 
+export function setInboxTasksToDOM(sideBar){
+  const taskContainer = document.querySelector(".tasks");
+  const id = taskContainer.getAttribute("id"); 
+
+  if(this.name === id){
+    // do nothing
+    return
+  }
+  taskContainer.replaceChildren(); 
+  taskContainer.removeAttribute("id");
+  
+  taskContainer.setAttribute("id",`${this.name}`); 
+
+  for(const task of this.tasks){
+    const domTask = new Task(task); 
+    domTask.addToDOM(); 
+  }
+}
 
 export function disableProjectInput(projectsParentElem){
   if(projectsParentElem.classList.contains("active")){
@@ -189,59 +207,39 @@ export function updateCheckedStatusClass(DOMTaskCompleted, taskDOMItems){
   }
 }
 
-function createTempProject() {
+
+
+export function createNewProjectInput(){
+  const allProjects = document.querySelector(".projects-added"); 
+  allProjects.classList.add("active");
+  
   const div = document.createElement("div"); 
-  const input = document.createElement("input"); 
+  const input = document.createElement("input");
   const addBtn = document.createElement("button"); 
   const deleteBtn = document.createElement("button"); 
-  
-  div.classList.add("temp-project"); 
-  div.classList.add("active");  
 
+  div.id = ("temp-project"); 
+  input.type = "text"; 
   input.id = "project-input"; 
-  addBtn.id = "project-add-button"; 
+  input.setAttribute("minlength", "3"); 
+  input.setAttribute("maxlength", "20"); 
+  input.setAttribute("required","required"); 
+  addBtn.id = "project-add-button";
   deleteBtn.id = "project-delete-button";
 
   addBtn.textContent = "Add"; 
-  deleteBtn.textContent = "Delete";
+  deleteBtn.textContent = "Delete"; 
 
-  div.appendChild(input); 
-  div.appendChild(addBtn); 
-  div.appendChild(deleteBtn); 
+  div.classList.add("active"); 
 
-  return {div, input, addBtn, deleteBtn}
-}
+  div.appendChild(input);
+  div.appendChild(addBtn);
+  div.appendChild(deleteBtn);
+  allProjects.appendChild(div); 
 
-export function createNewProjectInput(){
-  const projectsParent = document.querySelector(".projects-added"); 
-  projectsParent.classList.add("active");
+  input.focus() 
 
-  const tempDOMProject = createTempProject();
-  projectsParent.appendChild(tempDOMProject.div); 
-
-
-  tempDOMProject.addBtn.addEventListener("click",(e)=>{;
-    tempDOMProject.div.classList.remove("active"); 
-    projectsParent.classList.remove("active"); 
-    projectsParent.removeChild(tempDOMProject.div);
-    e.preventDefault();
-  });
-
-  tempDOMProject.deleteBtn.addEventListener("click", (e)=>{
-    projectsParent.removeChild(tempDOMProject.div);  
-    projectsParent.classList.remove("active"); 
-    e.preventDefault(); 
-  })
-  tempDOMProject.div.addEventListener("keyup", (e)=>{
-    e.preventDefault(); 
-    if(e.key === "Enter"){
-      tempDOMProject.div.classList.remove("active"); 
-      projectsParent.classList.remove("active"); 
-      projectsParent.removeChild(tempDOMProject.div);
-    }
-  })
-  tempDOMProject.input.focus()
-  return tempDOMProject; 
+  return {div,input,addBtn,deleteBtn}
 }
 
 export function expandSideBar(icon, sideBarContainer){

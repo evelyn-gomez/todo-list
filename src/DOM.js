@@ -1,7 +1,7 @@
 import "./styles/main.css";
 import TaskForm from "./taskForm";
 import Project from "./project";
-import { expandSideBar, collapseSideBar, createNewProjectInput, removeActiveProject, disableProjectInput, setSideBarOption} from "./utils";
+import { expandSideBar, collapseSideBar, createNewProjectInput, removeActiveProject, disableProjectInput, setSideBarOption, getCurrentOption, setInboxTasksToDOM} from "./utils";
 import Storage from "./storage";
 
 class DOM {
@@ -29,23 +29,29 @@ class DOM {
    * @param {import("./taskForm").TaskParams} taskParams 
    */
   addTask({ title, dueDate, priority, done }){
-    Storage.addTasks({ title, dueDate, priority, done });
+    const tasksContainer = document.querySelector(".tasks"); 
+    if(tasksContainer.id === "inbox-tasks"){
+      Storage.addInboxTasks({ title, dueDate, priority, done });
+    }
+    const currentOptionSelected = getCurrentOption(); 
+    const project = Storage.projects.find(proj => proj.name === currentOptionSelected.id);
+    Storage.addProjectTasks(project,{title, dueDate,priority,done} ); 
     this.closeModal()
   }
 
- openModal(){
+  openModal(){
   this.overlayDiv.classList.remove("hidden"); 
   this.modalParent.classList.remove("hidden"); 
   this.title.focus()
- }
+  }
 
- closeModal(){
+  closeModal(){
   this.modalParent.classList.add("hidden"); 
   this.overlayDiv.classList.add("hidden"); 
   this.form.cancel();
- }
+  }
 
- initialListeners(){
+  initialListeners(){
     this.modalBtn.addEventListener("click", ()=>{
         if(this.projectsContainer.classList.contains("active")){
           removeActiveProject(this.projectsContainer); 
@@ -76,6 +82,7 @@ class DOM {
     this.sideBarInboxTasks.addEventListener("click",()=>{
       disableProjectInput(this.projectsContainer); 
       setSideBarOption(this.sideBarInboxTasks); 
+      // setInboxTasksToDOM(sidebar))(this.sideBarInboxTasks); 
       console.log("Inbox, Default")
     })
     this.sideBarWeeklyTask.addEventListener("click", ()=>{
@@ -99,11 +106,32 @@ class DOM {
       }else if(projectsAddedLibrary.classList.contains("active")){
         return 
       }
-      const tempProject = createNewProjectInput(); 
-      tempProject.addBtn.addEventListener("click", ()=>{
-        const newProject = new Project(tempProject.input.value)
-        newProject.addToDOM(tempProject); 
+      const {div, input,addBtn,deleteBtn} = createNewProjectInput(); 
+      addBtn.addEventListener("click", (e)=>{
+        e.preventDefault(); 
+        const isProjectInStorage = Storage.projects.find(proj => proj.name ===  input.value);
+        if(isProjectInStorage === undefined){
+          if(input.value.length <= 1){
+            alert("Project cannot be empty"); 
+            return
+          }
+          const project = new Project(input.value); 
+          project.addToDOM(); 
+          Storage.addProject(project); 
+          projectsAddedLibrary.classList.remove("active"); 
+          div.remove();  
+        }
+        // project name already exits; 
       })
+
+      deleteBtn.addEventListener("click",()=>{
+        console.log("delete project"); 
+        projectsAddedLibrary.classList.remove("active"); 
+        div.remove(); 
+      })
+        
+      
+
     })
   }
 

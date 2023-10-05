@@ -1,4 +1,4 @@
-import { setSideBarOption } from "./utils";
+import { setSideBarOption, getCurrentOption } from "./utils";
 import Task from "./task";
 import Storage from "./storage";
 
@@ -21,8 +21,12 @@ export default class Project {
     this.tasks = tasks; 
   }
 
+  /**
+   * 
+   * @returns {Object}; 
+   */
   serialize() {
-    const {name, tasks } = this; 
+    const {name, tasks} = this; 
     return {name, tasks};
   }
 
@@ -35,6 +39,18 @@ export default class Project {
   }
 
   setTasksToDOM(){
+    const taskContainer = document.querySelector(".tasks");
+    const id = taskContainer.getAttribute("id"); 
+  
+    if(this.name === id){
+      // do nothing
+      return
+    }
+    taskContainer.replaceChildren(); 
+    taskContainer.removeAttribute("id");
+    
+    taskContainer.setAttribute("id",`${this.name}`); 
+
     for(const task of this.tasks){
       const domTask = new Task(task); 
       domTask.addToDOM(); 
@@ -45,8 +61,9 @@ export default class Project {
    return this.tasks; 
   }
  
-  setTask(newTask){
-   this.tasks.push(newTask); 
+  setTask(newTask){ 
+    this.tasks.push(newTask); 
+    newTask.addToDOM(); 
   }
  
   #isInTasks(taskToFind){
@@ -58,30 +75,35 @@ export default class Project {
    return this.#isInTasks(taskToFind)
   }
 
-  addToDOM(parentElem){
-   const newProjectDiv = document.createElement("div");
-   const newProjectName = document.createElement("div"); 
-   const newProjectDeleteBtn = document.createElement("button");
+  addToDOM(){
+    const parentElem = document.querySelector(".projects-added"); 
+    const projectElem = document.createElement("div");
+    const projectNameElem = document.createElement("div"); 
+    const projectDeleteBtn = document.createElement("button");
 
-   newProjectDiv.classList.add("project"); 
-   newProjectDiv.id = this.id; 
-   newProjectName.textContent = `${this.name}`
-   newProjectDeleteBtn.textContent = "X"; 
+    projectElem.classList.add("project"); 
+    projectElem.id = this.name; 
+    projectNameElem.textContent = `${this.name}`
+    projectDeleteBtn.textContent = "X"; 
 
-   // set as current option; 
-   setSideBarOption(newProjectDiv); 
-  //  removeCurrentProjOrInbox(); 
-  //  setProjTasks()
-   Storage.addProject(this); 
-  
-   newProjectDiv.addEventListener("click", ()=>{
-    setSideBarOption(newProjectDiv); 
-    this.setTasksToDOM(); 
-   });
-  
-   newProjectDiv.appendChild(newProjectName);
-   newProjectDiv.appendChild(newProjectDeleteBtn);
-   parentElem.appendChild(newProjectDiv); 
+    projectElem.appendChild(projectNameElem);
+    projectElem.appendChild(projectDeleteBtn);
+    parentElem.appendChild(projectElem); 
+
+    // this.setTasksToDOM(parentElem) 
+    //  removeCurrentProjOrInbox(); 
+    //  setProjTasks()
+    // Storage.addProject(this); 
+    projectElem.addEventListener("click", ()=>{
+      setSideBarOption(projectElem);
+      this.setTasksToDOM(); 
+      console.log(projectElem.id); 
+      this.setTasksToDOM()
+      // this.setTasksToDOM(); 
+    });
+
+
+
   }
  
 }

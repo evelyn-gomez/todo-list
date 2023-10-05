@@ -131,24 +131,31 @@ button.add-project-button {
   grid-template-columns: 2fr 1fr;
 }
 
-.temp-project{
+.projects-added{
+  /* max-width: 160px; */
+  min-width: 160px;
+}
+
+#temp-project{
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-areas: 
   "input input"
   "add delete";
+  max-width: inherit;
+  width: inherit;
 }
 
-.temp-project > #project-input{
+#temp-project > #project-input{
   display: inline-block;
   grid-area: input;
 }
-.temp-project > #project-add-button{
+#temp-project > #project-add-button{
   display: inline-block;
   grid-area: add;
 }
 
-.temp-project > #project-delete-button{
+#temp-project > #project-delete-button{
   display: inline-block;
   grid-area: delete; 
 }
