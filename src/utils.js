@@ -1,4 +1,6 @@
 import { DateTime } from "luxon";
+import Storage from "./storage";
+import Task from "./task";
 
 export const taskClassesforItems = ["check-item", "title-item", "dueDate-item", "priority-item"]; 
 export const priorities = ["","low", "medium", "high"];
@@ -159,23 +161,21 @@ export function setSideBarOption(activeSideBar){
   activeSideBar.classList.add("active-tasks"); 
 } 
 
-export function setInboxTasksToDOM(sideBar){
+export function setInboxTasksToDOM(inbox){
   const taskContainer = document.querySelector(".tasks");
   const id = taskContainer.getAttribute("id"); 
 
-  if(this.name === id){
+  if(inbox.id === id){
     // do nothing
     return
   }
   taskContainer.replaceChildren(); 
   taskContainer.removeAttribute("id");
-  
-  taskContainer.setAttribute("id",`${this.name}`); 
-
-  for(const task of this.tasks){
+  const inboxTasks = Storage.inbox
+  for(const task of inboxTasks){
     const domTask = new Task(task); 
     domTask.addToDOM(); 
-  }
+  }; 
 }
 
 export function disableProjectInput(projectsParentElem){

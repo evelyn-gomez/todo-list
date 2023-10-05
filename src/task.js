@@ -15,8 +15,8 @@ export default class Task {
   /**
    * @param {TaskParams} params 
    */
-  constructor({ id = nextTaskId(), title, dueDate, priority, done, }) {
-    this.id = id;
+  constructor({ title, dueDate, priority, done, }) {
+    // this.id = id;
     this.title = title;
     this.dueDate = setDueDate(dueDate); 
     this.priority = priority; 

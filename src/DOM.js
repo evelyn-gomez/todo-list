@@ -81,8 +81,8 @@ class DOM {
     })
     this.sideBarInboxTasks.addEventListener("click",()=>{
       disableProjectInput(this.projectsContainer); 
-      setSideBarOption(this.sideBarInboxTasks); 
-      // setInboxTasksToDOM(sidebar))(this.sideBarInboxTasks); 
+      setSideBarOption(this.sideBarInboxTasks);
+      setInboxTasksToDOM(this.sideBarInboxTasks); 
       console.log("Inbox, Default")
     })
     this.sideBarWeeklyTask.addEventListener("click", ()=>{

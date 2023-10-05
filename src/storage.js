@@ -69,25 +69,21 @@ export default class Storage {
     this.store()
   }
 
-  // static addProjectTasks(project, ...taskParams){
-  //   for(const params of taskParams){
-  //     const task = new Task(params); 
-  //     console.log(task); 
-  //     const activeProject = this.projects.find(proj => proj === project);
-  //     activeProject.setTask(task); 
-  //   }
-  //   this.store(); 
-  // }
+  static addProjectTasks(project, ...taskParams){
+    for(const params of taskParams){
+      const task = new Task(params); 
+      const activeProject = this.projects.find(proj => proj === project);
+      activeProject.setTask(task); 
+    }
+    this.store(); 
+  }
 
   static addProjects(...projects){
     for(const proj of projects){
       const project = new Project(proj.name); 
       project.addToDOM(); 
       this.projects.push(project);
-      const allTask = project.getAllTasks();
-      if(allTask.length >=1){
-        this.addProjectTasks(project.tasks, project)
-      }
+      project.setAllTasks(proj.tasks)
     }
     this.store()
   }
