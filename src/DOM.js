@@ -1,7 +1,7 @@
 import "./styles/main.css";
 import TaskForm from "./taskForm";
 import Project from "./project";
-import { expandSideBar, collapseSideBar, createNewProjectInput, removeActiveProject, disableProjectInput, setSideBarOption, getCurrentOption, setInboxTasksToDOM} from "./utils";
+import { expandSideBar, collapseSideBar, createNewProjectInput, removeActiveProject, disableProjectInput, setSideBarOption, setInboxTasksToDOM, getCurrentOption, setWeeklyTasksToDOM} from "./utils";
 import Storage from "./storage";
 
 class DOM {
@@ -32,12 +32,14 @@ class DOM {
     const tasksContainer = document.querySelector(".tasks"); 
     if(tasksContainer.id === "inbox-tasks"){
       Storage.addInboxTasks({ title, dueDate, priority, done });
+    }else{
+      const currentOptionSelected = getCurrentOption(); 
+      const project = Storage.projects.find(proj => proj.name === currentOptionSelected.id);
+      Storage.addProjectTasks(project,{ title, dueDate, priority, done }); 
     }
-    const currentOptionSelected = getCurrentOption(); 
-    const project = Storage.projects.find(proj => proj.name === currentOptionSelected.id);
-    Storage.addProjectTasks(project,{title, dueDate,priority,done} ); 
     this.closeModal()
   }
+
 
   openModal(){
   this.overlayDiv.classList.remove("hidden"); 
@@ -82,12 +84,13 @@ class DOM {
     this.sideBarInboxTasks.addEventListener("click",()=>{
       disableProjectInput(this.projectsContainer); 
       setSideBarOption(this.sideBarInboxTasks);
-      setInboxTasksToDOM(this.sideBarInboxTasks); 
+      setInboxTasksToDOM(); 
       console.log("Inbox, Default")
     })
     this.sideBarWeeklyTask.addEventListener("click", ()=>{
       disableProjectInput(this.projectsContainer); 
-      setSideBarOption(this.sideBarWeeklyTask);    
+      setSideBarOption(this.sideBarWeeklyTask);   
+      setWeeklyTasksToDOM(); 
       console.log("weekly tasks");
     });
     this.sideBarProjectsHeader.addEventListener("click", ()=>{
@@ -113,15 +116,17 @@ class DOM {
         if(isProjectInStorage === undefined){
           if(input.value.length <= 1){
             alert("Project cannot be empty"); 
-            return
+            return;
           }
           const project = new Project(input.value); 
           project.addToDOM(); 
           Storage.addProject(project); 
           projectsAddedLibrary.classList.remove("active"); 
           div.remove();  
+        }else{
+          alert("project name already exists");
+          input.focus();   
         }
-        // project name already exits; 
       })
 
       deleteBtn.addEventListener("click",()=>{

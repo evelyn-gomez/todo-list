@@ -1,12 +1,11 @@
-import "./styles/main.css";
 import Storage from "./storage";
-import { enableEditing, setDueDate, convertDueDateFormat, priorities as PRIORITIES, taskClassesforItems as TASK_CLASSES_FOR_ITEMS, disableEditing, updateCheckedStatusClass } from "./utils";
+import { enableEditing, setDueDate, convertDueDateFormat, priorities as PRIORITIES, taskClassesforItems as TASK_CLASSES_FOR_ITEMS, disableEditing, updateCheckedStatusClass, getCurrentOption} from "./utils";
 
-let taskId = 0;
-function nextTaskId() {
-  taskId += 1;
-  return taskId;
-}
+// let taskId = 0;
+// function nextTaskId() {
+//   taskId += 1;
+//   return taskId;
+// }
 
 /** @typedef {import("./taskForm").TaskParams} TaskParams */
 
@@ -31,11 +30,6 @@ export default class Task {
    * @returns {object}
    */
   serialize() {
-    // if(project === undefined){
-    //   this.project = "inbox"; 
-    // }else{
-    //   this.project = project; 
-    // }
     const { title, dueDate, priority, done,} = this; 
     return { title, dueDate, priority, done};
   }
@@ -47,7 +41,7 @@ export default class Task {
     this.title = title;
     this.dueDate = dueDate;
     this.priority = priority;
-    this.done = done; 
+    this.done = done;
   }
 
   addToDOM(){
@@ -144,17 +138,23 @@ export default class Task {
     // })
 
     this.toggleEditBtn.addEventListener("click", ()=>{
-      if (this.isEditing) {
+      if(this.isEditing) {
         disableEditing(this.toggleEditBtn, taskDOMDivs, taskDOMItems);
         const params = {
           title: DOMTitle.value,
           dueDate: DOMDueDate.value,
           priority: DOMPriority.value,
           done: DOMTaskCompleted.checked,
+        }   
+        const activeSideMenuItem = getCurrentOption();
+        if(activeSideMenuItem.id === "inbox"){
+          Storage.updateTask(this, params);
+          this.isEditing = false;
+        }else{
+          Storage.updateTaskInProject(activeSideMenuItem, this, params);
+          this.isEditing = false;
         }
-        Storage.updateTask(this, params);
-        this.isEditing = false;
-      } else {
+      }else {
         enableEditing(this.toggleEditBtn, taskDOMDivs, taskDOMItems); 
         DOMTitle.focus()
         this.isEditing = true;
@@ -164,7 +164,12 @@ export default class Task {
     this.deleteBtn.addEventListener("click", ()=>{
       taskDiv.style.opacity =  "0"; 
       setTimeout(() => {
-        Storage.deleteTask(this);
+        const activeSideMenuItem = getCurrentOption();
+        if(activeSideMenuItem.id === "inbox"){
+          Storage.deleteTask(this);
+        }else{
+          Storage.deleteTaskInProject(activeSideMenuItem, this);
+        }
         tasksContainer.removeChild(taskDiv); 
       }, 500);
     })
@@ -177,7 +182,12 @@ export default class Task {
         priority: DOMPriority.value,
         done: DOMTaskCompleted.checked
       }
-      Storage.updateTask(this,params)
+      const activeSideMenuItem = getCurrentOption(); 
+      if(activeSideMenuItem.id === "inbox"){
+        Storage.updateTask(this,params)
+      }else{
+        Storage.updateTaskInProject(activeSideMenuItem,this,params); 
+      }
     })
 
     if(this.done && DOMTaskCompleted.checked === false){

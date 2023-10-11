@@ -31,7 +31,6 @@ export default class TaskForm {
     this.taskForm.addEventListener("submit", (e)=>{
       e.preventDefault(); 
       const title = this.titleInput.value;
-      // const description = this.descriptionInput.value; 
       const dueDate = this.dueDateInput.value; 
       const priority = this.priorityInput.value; 
       this.onSubmit({

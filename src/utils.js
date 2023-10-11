@@ -121,7 +121,10 @@ export function removeActiveProject(projectsParent){
   projectsParent.removeChild(activeElement); 
   projectsParent.classList.remove("active"); 
 }
-
+/**
+ * 
+ * @returns {Element} side option
+ */
 export function getCurrentOption(){
   const sideMenuOptions = Array.from(document.querySelector(".side-bar-menu").children);
   const projectMenuOptions = Array.from(document.querySelector(".projects-added").children); 
@@ -147,31 +150,66 @@ export function getCurrentOption(){
   return currentOption; 
 
 }
+
+/**
+ * 
+ * @param {Element} option 
+ */
+export function changeTaskContainerHeader(option){
+  const taskContainer = document.querySelector(".tasks-container");
+  const tasksHeader = taskContainer.querySelector(".tasks-header"); 
+
+
+  if(option.id === "inbox-tasks"){
+    tasksHeader.textContent = "INBOX TASKS"; 
+  }else{
+    const optionUpperCase = option.id.toUpperCase(); 
+    tasksHeader.textContent = `${optionUpperCase} TASKS`;
+  }
+}
+
 /**
  * 
  * @param {Element} selectedOption 
  * @returns 
  */
 export function setSideBarOption(activeSideBar){
-  // what is activeSideBar 
-  // get what is the currentOptionSelected; 
   const currentOption = getCurrentOption();
-
   currentOption.classList.remove("active-tasks"); 
+  changeTaskContainerHeader(activeSideBar); 
   activeSideBar.classList.add("active-tasks"); 
 } 
 
-export function setInboxTasksToDOM(inbox){
+export function setWeeklyTasksToDOM(){
+  const sideBarMenu = document.querySelector(".side-bar-menu")
+  const weekly = sideBarMenu.querySelector("#weekly"); 
   const taskContainer = document.querySelector(".tasks");
   const id = taskContainer.getAttribute("id"); 
 
-  if(inbox.id === id){
+  if(`${weekly.id}`=== id){
+    // do nothing
+    return
+  }
+  debugger
+  taskContainer.replaceChildren(); 
+  taskContainer.removeAttribute("id");
+  taskContainer.id = weekly.id; 
+}
+
+export function setInboxTasksToDOM(){
+  const sideBarMenu = document.querySelector(".side-bar-menu")
+  const inbox = sideBarMenu.querySelector(".inbox-tasks"); 
+  const taskContainer = document.querySelector(".tasks");
+  const id = taskContainer.getAttribute("id"); 
+
+  if(`${inbox.id}-tasks`=== id){
     // do nothing
     return
   }
   taskContainer.replaceChildren(); 
   taskContainer.removeAttribute("id");
-  const inboxTasks = Storage.inbox
+  taskContainer.id = `${inbox.id}-tasks`;
+  const inboxTasks = Storage.inbox;
   for(const task of inboxTasks){
     const domTask = new Task(task); 
     domTask.addToDOM(); 
@@ -266,4 +304,5 @@ export function collapseSideBar(icon,sideBarContainer){
 
   
 }
+
 

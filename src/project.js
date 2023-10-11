@@ -1,4 +1,4 @@
-import { setSideBarOption, getCurrentOption } from "./utils";
+import { setSideBarOption, setInboxTasksToDOM, changeTaskContainerHeader} from "./utils";
 import Task from "./task";
 import Storage from "./storage";
 
@@ -26,6 +26,7 @@ export default class Project {
    * @returns {Object}; 
    */
   serialize() {
+    console.log(this.tasks); 
     const {name, tasks} = this; 
     return {name, tasks};
   }
@@ -65,17 +66,9 @@ export default class Project {
     this.tasks.push(newTask); 
     newTask.addToDOM(); 
   }
- 
-  #isInTasks(taskToFind){
-  return this.tasks.find(task => 
-     task.name === taskToFind.name)
-  }
- 
-  getTask(taskToFind){
-   return this.#isInTasks(taskToFind)
-  }
 
   addToDOM(){
+    const taskContainer = document.querySelector(".tasks");
     const parentElem = document.querySelector(".projects-added"); 
     const projectElem = document.createElement("div");
     const projectNameElem = document.createElement("div"); 
@@ -89,23 +82,27 @@ export default class Project {
     projectElem.appendChild(projectNameElem);
     projectElem.appendChild(projectDeleteBtn);
     parentElem.appendChild(projectElem); 
+    
+    if(taskContainer.id === "inbox-tasks"){
+      /// do nothing; 
+    }else if(parentElem.classList.contains("active")){
+        setSideBarOption(projectElem); 
+        this.setTasksToDOM(); 
+    }
 
-    // this.setTasksToDOM(parentElem) 
-    //  removeCurrentProjOrInbox(); 
-    //  setProjTasks()
-    // Storage.addProject(this); 
-    projectElem.addEventListener("click", ()=>{
+    projectNameElem.addEventListener("click", ()=>{
       setSideBarOption(projectElem);
-      this.setTasksToDOM(); 
-      console.log(projectElem.id); 
       this.setTasksToDOM()
-      // this.setTasksToDOM(); 
     });
 
-
-
+    projectDeleteBtn.addEventListener("click",()=>{
+      const inbox = document.querySelector("div#inbox"); 
+      Storage.deleteProject(this);
+      setInboxTasksToDOM();
+      setSideBarOption(inbox); 
+      parentElem.removeChild(projectElem); 
+    })
   }
- 
 }
 
 

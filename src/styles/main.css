@@ -1,4 +1,15 @@
 @import "~normalize.css/normalize.css";
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville&display=swap');
+
+@font-face {
+  font-family: 'Libre Baskerville';
+  src: url('https://fonts.googleapis.com/css2?family=Libre+Baskerville&display=swap'); 
+}
+
+@font-face {
+  font-family: fa;
+  src: url();
+}
 
 html{
   height: 100%;
@@ -126,11 +137,15 @@ button.add-project-button {
   display: none;
 }
 
-.project{
+.project {
   display: grid;
   grid-template-columns: 2fr 1fr;
+  padding: 5px 20px 5px 20px;
 }
 
+.project > div{
+  font-family: 'Libre Baskerville';
+}
 .projects-added{
   /* max-width: 160px; */
   min-width: 160px;
@@ -185,9 +200,14 @@ svg{
   width: 100%;
   row-gap: 10px;
 }
+
+.tasks-container > h3{
+  font-family:libre baskerviller; 
+}
 .active {
   /* just a tag*/
 }
+
 /* children of task-container */
 .tasks-header{
   display: flex;

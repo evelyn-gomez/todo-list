@@ -44,8 +44,8 @@ export default class Storage {
    * @param {Task} task 
    * @param {TaskParams} params 
    */
-  static updateTask(task, params) { 
-    task.update(params);
+  static updateTask(task, params) {   
+    task.update(params); 
     this.store()
   }
 
@@ -55,7 +55,7 @@ export default class Storage {
    *
    */
   static deleteTask(task){
-   const taskIndex = this.inbox.findIndex(inboxTask => inboxTask.id === task.id); 
+   const taskIndex = this.inbox.findIndex(inboxTask => inboxTask.title === task.title); 
    this.inbox.splice(taskIndex,1); 
    this.store();
   }
@@ -88,20 +88,33 @@ export default class Storage {
     this.store()
   }
 
-  // static updateProject(project, {tasks, params}){
-  //   for (const proj of projects) {
-  //     this.projects.push(proj);
-  //     new Project(proj.name, proj.tasks).addToDOM();
-  //   }
-  // } 
 
-  // static deleteProject(project){
-  //   // whole project
-  // }
+  static deleteProject(project){
+    const projectIndex = this.projects.findIndex(proj => proj.name === project.name)
+    this.projects.splice(projectIndex,1); 
+    this.store(); 
+  }
 
-  // static deleteTaskInProject(){
+  static updateTaskInProject(activeSideMenuItem,taskToFind,taskParams){
+    const project = Storage.projects.find(proj => proj.name === activeSideMenuItem.id);
+    const indexOfTask = project.tasks.findIndex(task => task.title === taskToFind.title); 
+    const newTask = new Task(taskParams); 
+    project.tasks.splice(indexOfTask, 1, newTask); 
+    // project.updateTask(task, taskParams); 
+    this.store();
+  }
 
-  // }
+  /**
+   * 
+   * @param {Element} activeSideMenuItem 
+   * @param {Task} task 
+   */
+  static deleteTaskInProject(activeSideMenuItem, taskToDelete){
+    const project = Storage.projects.find(proj => proj.name === activeSideMenuItem.id);
+    const indexOfTask = project.tasks.findIndex(task => task.title === taskToDelete.title); 
+    project.tasks.splice(indexOfTask, 1); 
+    this.store(); 
+  }
 };
 
 
