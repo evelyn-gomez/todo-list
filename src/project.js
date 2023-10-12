@@ -1,4 +1,4 @@
-import { setSideBarOption, setInboxTasksToDOM, changeTaskContainerHeader} from "./utils";
+import { setSideBarOption, setInboxTasksToDOM,} from "./utils";
 import Task from "./task";
 import Storage from "./storage";
 
@@ -75,7 +75,9 @@ export default class Project {
     const projectDeleteBtn = document.createElement("button");
 
     projectElem.classList.add("project"); 
+
     projectElem.id = this.name; 
+
     projectNameElem.textContent = `${this.name}`
     projectDeleteBtn.textContent = "X"; 
 

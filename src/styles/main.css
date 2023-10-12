@@ -2,13 +2,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville&display=swap');
 
 @font-face {
-  font-family: 'Libre Baskerville';
+  font-family: 'libre baskerville';
   src: url('https://fonts.googleapis.com/css2?family=Libre+Baskerville&display=swap'); 
 }
 
 @font-face {
-  font-family: fa;
-  src: url();
+  font-family: 'gabarito';
+  src: url(../assets/fonts/Gabarito/static/Gabarito-SemiBold.ttf);
+}
+
+@font-face {
+  font-family: 'roboto';
+  src: url(../assets/fonts/Roboto/Roboto-Regular.ttf);
+}
+@font-face {
+  font-family: 'lato';
+  src: url(../assets/fonts/Lato/Lato-Regular.ttf);
 }
 
 html{
@@ -24,6 +33,7 @@ body {
   display: flex;
   flex-direction: column;
   width: inherit;
+  /* font-family: 'lato';  */
 }
 
 /* homepage > .home-header-container and .content */
@@ -126,6 +136,11 @@ button.add-project-button {
   font-size: 30px;
 }
 
+button.add-project-button:hover{
+  background-color:#7db980; 
+  font-size: 35px;
+}
+
 .active-tasks{
   background-color: #c1c1bb;
   border-radius: 10px;
@@ -141,38 +156,65 @@ button.add-project-button {
   display: grid;
   grid-template-columns: 2fr 1fr;
   padding: 5px 20px 5px 20px;
+  height: 30px;
+  align-items: center;
 }
 
-.project > div{
-  font-family: 'Libre Baskerville';
-}
-.projects-added{
-  /* max-width: 160px; */
-  min-width: 160px;
+.project > div {
+  font-size: 18px;
+  font-weight: 600;
 }
 
-#temp-project{
+.project  > button {
+  border: none;
+  width: fit-content;
+  border: 1px solid #838080;
+  height: fit-content;
+}
+
+.projects-added {
+  max-width: 160px;
+  width: 160px;
+  display: grid;
+}
+#temp-project {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-areas: 
-  "input input"
+  grid-template-areas: "input input"
   "add delete";
   max-width: inherit;
   width: inherit;
+  margin-top: 15px;
+  /* grid-row-gap: 5px; */
+  grid-column-gap: 10px;
+  /* height: 50px; */
+  height: 80px;
 }
 
-#temp-project > #project-input{
+#temp-project > #project-input {
   display: inline-block;
   grid-area: input;
-}
-#temp-project > #project-add-button{
-  display: inline-block;
-  grid-area: add;
+  border: 1px solid black;
+  border-radius: 5px;
+  height: 27px;
 }
 
-#temp-project > #project-delete-button{
+#temp-project > #project-add-button {
   display: inline-block;
-  grid-area: delete; 
+  grid-area: add;
+  background-color: #66bb6a;
+  border-color: #3f7742e6;
+  font-size: 17px;
+  font-weight: bolder;
+}
+
+#temp-project > #project-delete-button {
+  display: inline-block;
+  grid-area: delete;
+  background-color: #ffbebe;
+  border-color: #cc7f7f;
+  font-size: 17px;
+  font-weight: bolder;
 }
 
 /*change the sidebar icon*/
@@ -202,7 +244,7 @@ svg{
 }
 
 .tasks-container > h3{
-  font-family:libre baskerviller; 
+  /* font-family:libre baskerviller;  */
 }
 .active {
   /* just a tag*/
@@ -218,8 +260,16 @@ svg{
   flex-direction: column;
   justify-content: space-evenly; 
 }
-.open-modal > button{
+.open-modal > button {
   background-color: #D9D9D3;
+  border-color: #909087;
+  height: 40px;
+  width: 120px;
+  font-size: 18px;
+}
+.open-modal > button:hover{
+  background-color: #7db980;
+  font-size: 19px;
 }
 .tasks{
   display: grid; 
@@ -364,7 +414,7 @@ select:disabled{
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(152, 27, 27, 0.5);
+  background-color: rgb(4 1 1 / 50%);
   z-index: 2;
   cursor: pointer;
 }
@@ -372,25 +422,26 @@ select:disabled{
 .modal-parent {
   display: flex;
   flex-direction: column;
-  border: solid 1px rgb(125,125,255);
+  border: solid 1px #aaaaa6;
   border-radius: 20px;
-  background-color: rgb(125, 125, 255);
+  background-color:#D9D9D3; 
   position: absolute;
   max-width: 600px;
   z-index: 3;
   padding: 10px;
   margin: 200px 1rem 0px 350px;
-
 }
-.formContainer{
+
+.formContainer {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  max-width: 450px;
 }
 
 #task-form{
   display: grid;
-  grid-template-columns: repeat(4,1fr); 
+  grid-template-columns: repeat(3,1fr); 
   column-gap: 10px;
 }
 
@@ -403,6 +454,19 @@ select:disabled{
   border: solid black 1px;
   border-radius: 5px;
   width: 90%;
+  height: 30px;
+}
+
+.form-submit > #cancel-button{
+  background-color: #ffbebe;
+  border-color: #cc7f7f;
+  width: 60px;
+  height: 30px;
+}
+.form-submit > #add-button{
+  background-color: #66bb6a;
+  border-color: #3f7742e6;
+  width: 60px;
   height: 30px;
 }
 

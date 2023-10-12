@@ -190,7 +190,6 @@ export function setWeeklyTasksToDOM(){
     // do nothing
     return
   }
-  debugger
   taskContainer.replaceChildren(); 
   taskContainer.removeAttribute("id");
   taskContainer.id = weekly.id; 
