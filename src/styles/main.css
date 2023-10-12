@@ -1,25 +1,6 @@
 @import "~normalize.css/normalize.css";
 @import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville&display=swap');
 
-@font-face {
-  font-family: 'libre baskerville';
-  src: url('https://fonts.googleapis.com/css2?family=Libre+Baskerville&display=swap'); 
-}
-
-@font-face {
-  font-family: 'gabarito';
-  src: url(../assets/fonts/Gabarito/static/Gabarito-SemiBold.ttf);
-}
-
-@font-face {
-  font-family: 'roboto';
-  src: url(../assets/fonts/Roboto/Roboto-Regular.ttf);
-}
-@font-face {
-  font-family: 'lato';
-  src: url(../assets/fonts/Lato/Lato-Regular.ttf);
-}
-
 html{
   height: 100%;
   width: 100%;
@@ -39,10 +20,11 @@ body {
 /* homepage > .home-header-container and .content */
 .homepage {
   display: grid;
-  grid-template-rows: 1fr 6fr;
+  grid-template-rows: 1fr 6fr .25fr;
   grid-template-areas: 
   "home-header"
-  "content-cont";
+  "content-cont"
+  "footer"; 
   height: 100vh;
 }
 
@@ -489,4 +471,20 @@ button{
   border-radius: 5px;
 }
 
+footer {
+  grid-area: footer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: lightgray;
+  height: 30px;
+}
+
+.heart:before {
+  content: '\2665';
+  color: red;
+}
+.name-github{
+  display: flex;
+}
 
